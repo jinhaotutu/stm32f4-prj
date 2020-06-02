@@ -42,8 +42,8 @@ stm32f4-mk.bin \
 all: stm32f4-mk.elf secondary-outputs
 
 # Tool invocations
-stm32f4-mk.elf: $(OBJS) $(USER_OBJS) D:\data\my_prj\stm32f4-prj\STM32CubeIDE\STM32F407ZGTX_FLASH.ld
-	arm-none-eabi-gcc -o "stm32f4-mk.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\data\my_prj\stm32f4-prj\STM32CubeIDE\STM32F407ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4-mk.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+stm32f4-mk.elf: $(OBJS) $(USER_OBJS) /home/share/samba/tuya/my_prj/stm32f4-prj/STM32CubeIDE/STM32F407ZGTX_FLASH.ld
+	arm-none-eabi-gcc -o "stm32f4-mk.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/share/samba/tuya/my_prj/stm32f4-prj/STM32CubeIDE/STM32F407ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4-mk.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

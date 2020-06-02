@@ -55,10 +55,10 @@ int main(void)
 	while(1)
 	{
 		LED1_ON;
-		delay_ms(500);
+		delay_ms(1000);
 
 		LED1_OFF;
-		delay_ms(500);
+		delay_ms(1000);
 	}
 }
 
