@@ -181,19 +181,41 @@ void Sys_Config(void)
 	printf("\r\n\r\n***********STM32 System Config!***********\r\n\r\n");
 }
 
-int fputc(int ch, FILE *f)
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+#ifdef __GNUC__
+int __io_putchar(int ch)
 {
-	USART_SendData(USART1, (u8) ch);
-	
-	while(!(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == SET));
+    USART_SendData(USART1, (u8) ch);
 
-	return ch;
+    while(!(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == SET));
+
+    return ch;
 }
 
+__attribute__((weak)) int _write(int file, char *ptr, int len)
+{
+    int DataIdx;
+    for (DataIdx = 0; DataIdx < len; DataIdx++)
+    {
+        __io_putchar(*ptr++);
+    }
+    return len;
+}
+#else
+int fputc(int ch, FILE *f)
+{
+    USART_SendData(USART1, (u8) ch);
+
+    while(!(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == SET));
+
+    return ch;
+}
 
 int fgetc(FILE *f)
 {
-	while(!(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET));
-	
-	return (USART_ReceiveData(USART1));
+    while(!(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET));
+
+    return (USART_ReceiveData(USART1));
 }
+#endif
