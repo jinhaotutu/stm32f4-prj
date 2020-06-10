@@ -26,5 +26,5 @@ void easy_logger_init(void)
 
     // elog_set_filter();
 
-    //log_i("easy");
+    log_i("easy_logger_init succeed");
 }

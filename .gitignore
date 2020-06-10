@@ -57,6 +57,7 @@ dkms.conf
 # project
 *.crf
 *.txt
+*.sct
 *.lst
 *.axf
 *.htm

@@ -34,7 +34,11 @@ extern "C" {
 
 /* Defines --------------------------------------------------------------------*/
 #ifndef __FILENAME__
+#ifdef __GNUC__
 #define __FILENAME__ (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1):__FILE__)
+#else
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? (strrchr(__FILE__, '\\') + 1):__FILE__)
+#endif
 #endif
 #define os_printf(_fmt_, ...) \
         printf("[log ] %s:%d | "_fmt_"\r\n", __FILENAME__, __LINE__, ##__VA_ARGS__)
