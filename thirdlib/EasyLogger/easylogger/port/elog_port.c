@@ -27,9 +27,10 @@
  */
 
 #include <elog.h>
-#include "stm_config.h"
 
+#ifdef USE_OS
 static SemaphoreHandle_t log_mutex = NULL;
+#endif
 
 /**
  * EasyLogger port initialize

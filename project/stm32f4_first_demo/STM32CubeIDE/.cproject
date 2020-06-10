@@ -48,6 +48,8 @@
 									<listOptionValue builtIn="false" value="../../../../sys"/>
 									<listOptionValue builtIn="false" value="../../../../misis"/>
 									<listOptionValue builtIn="false" value="../../user_code"/>
+									<listOptionValue builtIn="false" value="&quot;../../../..\thirdlib\cJSON&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../../../..\thirdlib\EasyLogger\easylogger\inc&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1395490270" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -76,7 +78,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="thirdlib/EasyLogger|fwlib/src/stm32f4xx_fmc.c|fwlib/src/stm32f4xx_spdifrx.c|fwlib/src/stm32f4xx_sai.c|fwlib/src/stm32f4xx_rng.c|fwlib/src/stm32f4xx_qspi.c|fwlib/src/stm32f4xx_ltdc.c|fwlib/src/stm32f4xx_lptim.c|fwlib/src/stm32f4xx_hash_sha1.c|fwlib/src/stm32f4xx_hash_md5.c|fwlib/src/stm32f4xx_fmpi2c.c|fwlib/src/stm32f4xx_flash_ramfunc.c|fwlib/src/stm32f4xx_dsi.c|fwlib/src/stm32f4xx_dma2d.c|fwlib/src/stm32f4xx_dfsdm.c|fwlib/src/stm32f4xx_dbgmcu.c|fwlib/src/stm32f4xx_cryp.c|fwlib/src/stm32f4xx_cryp_tdes.c|fwlib/src/stm32f4xx_cryp_des.c|fwlib/src/stm32f4xx_cryp_aes.c|fwlib/src/stm32f4xx_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="thirdlib/EasyLogger/easylogger/plugins|fwlib/src/stm32f4xx_fmc.c|fwlib/src/stm32f4xx_spdifrx.c|fwlib/src/stm32f4xx_sai.c|fwlib/src/stm32f4xx_rng.c|fwlib/src/stm32f4xx_qspi.c|fwlib/src/stm32f4xx_ltdc.c|fwlib/src/stm32f4xx_lptim.c|fwlib/src/stm32f4xx_hash_sha1.c|fwlib/src/stm32f4xx_hash_md5.c|fwlib/src/stm32f4xx_fmpi2c.c|fwlib/src/stm32f4xx_flash_ramfunc.c|fwlib/src/stm32f4xx_dsi.c|fwlib/src/stm32f4xx_dma2d.c|fwlib/src/stm32f4xx_dfsdm.c|fwlib/src/stm32f4xx_dbgmcu.c|fwlib/src/stm32f4xx_cryp.c|fwlib/src/stm32f4xx_cryp_tdes.c|fwlib/src/stm32f4xx_cryp_des.c|fwlib/src/stm32f4xx_cryp_aes.c|fwlib/src/stm32f4xx_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -150,7 +152,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="thirdlib/EasyLogger|fwlib/src/stm32f4xx_fmc.c|fwlib/src/stm32f4xx_spdifrx.c|fwlib/src/stm32f4xx_sai.c|fwlib/src/stm32f4xx_rng.c|fwlib/src/stm32f4xx_qspi.c|fwlib/src/stm32f4xx_ltdc.c|fwlib/src/stm32f4xx_lptim.c|fwlib/src/stm32f4xx_hash_sha1.c|fwlib/src/stm32f4xx_hash_md5.c|fwlib/src/stm32f4xx_fmpi2c.c|fwlib/src/stm32f4xx_flash_ramfunc.c|fwlib/src/stm32f4xx_dsi.c|fwlib/src/stm32f4xx_dma2d.c|fwlib/src/stm32f4xx_dfsdm.c|fwlib/src/stm32f4xx_dbgmcu.c|fwlib/src/stm32f4xx_cryp.c|fwlib/src/stm32f4xx_cryp_tdes.c|fwlib/src/stm32f4xx_cryp_des.c|fwlib/src/stm32f4xx_cryp_aes.c|fwlib/src/stm32f4xx_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="thirdlib/EasyLogger/easylogger/plugins|fwlib/src/stm32f4xx_fmc.c|fwlib/src/stm32f4xx_spdifrx.c|fwlib/src/stm32f4xx_sai.c|fwlib/src/stm32f4xx_rng.c|fwlib/src/stm32f4xx_qspi.c|fwlib/src/stm32f4xx_ltdc.c|fwlib/src/stm32f4xx_lptim.c|fwlib/src/stm32f4xx_hash_sha1.c|fwlib/src/stm32f4xx_hash_md5.c|fwlib/src/stm32f4xx_fmpi2c.c|fwlib/src/stm32f4xx_flash_ramfunc.c|fwlib/src/stm32f4xx_dsi.c|fwlib/src/stm32f4xx_dma2d.c|fwlib/src/stm32f4xx_dfsdm.c|fwlib/src/stm32f4xx_dbgmcu.c|fwlib/src/stm32f4xx_cryp.c|fwlib/src/stm32f4xx_cryp_tdes.c|fwlib/src/stm32f4xx_cryp_des.c|fwlib/src/stm32f4xx_cryp_aes.c|fwlib/src/stm32f4xx_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

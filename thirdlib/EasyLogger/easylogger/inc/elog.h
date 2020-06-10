@@ -33,12 +33,15 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifndef __FILENAME__
 #define __FILENAME__ ((strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1):__FILE__))
+#endif
 
 /* output log's level */
 #define ELOG_LVL_ASSERT                      0

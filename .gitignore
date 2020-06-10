@@ -55,9 +55,16 @@ dkms.conf
 .DS_Store
 
 # project
-.dbgconf
-.lst
-.crf
-.axf
-.su
+*.crf
+*.txt
+*.lst
+*.axf
+*.htm
+*.lnp
+*.dep
+language.settings.xml
+*.mk
+*.bin
+*.list
+makefile
 

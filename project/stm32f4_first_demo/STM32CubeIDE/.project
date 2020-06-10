@@ -611,6 +611,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>thirdlib/EasyLogger/easylogger_init.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/EasyLogger/easylogger_init.c</locationURI>
+		</link>
+		<link>
 			<name>thirdlib/cJSON/LICENSE</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/cJSON/LICENSE</locationURI>

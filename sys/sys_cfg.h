@@ -1,14 +1,44 @@
+/**
+  *****************************************************************************
+  * @file    : sys_config.h
+  * @author  : Tuu
+  * @version : 1.0.0
+  * @date    : 2020-04-01
+  * @brief   : stm32 config file
+  ******************************************************************************
+  * @lasteditors  : Tuu
+  * @lasteditTime : 2020-06-02
+  ******************************************************************************
+  * @atten   : Copyright (C) by Tuu Inc
+  *
+  *****************************************************************************
+  */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef  SYS_CFG_H
-#define  SYS_CFG_H
+#ifndef  __SYS_CFG_H
+#define  __SYS_CFG_H
 
 /* Includes -------------------------------------------------------------------*/
 #include "stm32f4xx.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+  *****************************************************************************
+  * @version brief  :
+  *****************************************************************************
+  */
+
 
 /* Defines --------------------------------------------------------------------*/
-#define LED1_ON     GPIO_ResetBits(GPIOC, GPIO_Pin_0)
-#define LED1_OFF    GPIO_SetBits(GPIOC, GPIO_Pin_0)
+#ifndef __FILENAME__
+#define __FILENAME__ (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1):__FILE__)
+#endif
+#define os_printf(_fmt_, ...) \
+        printf("[log ] %s:%d | "_fmt_"\r\n", __FILENAME__, __LINE__, ##__VA_ARGS__)
+
 
 /* Types ----------------------------------------------------------------------*/
 
@@ -19,6 +49,10 @@
 /* Functions ------------------------------------------------------------------*/
 void Sys_Config(void);
 
-#endif /* SYS_CFG_H */
+#ifdef __cplusplus
+}
+#endif
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+#endif /* __SYS_CFG_H */
+
+/************************ (C) COPYRIGHT Tuu ********END OF FILE****************/

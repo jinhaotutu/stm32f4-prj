@@ -15,7 +15,7 @@
 
 
 /* Functions ------------------------------------------------------------------*/
-void Delay_Configuration(void);
+void Delay_Config(void);
 void delay_ms(vu32 nTime);
 void delay_us(vu32 nTime);
 
