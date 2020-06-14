@@ -68,4 +68,5 @@ language.settings.xml
 *.bin
 *.list
 makefile
+*.settings
 

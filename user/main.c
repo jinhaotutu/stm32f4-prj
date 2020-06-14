@@ -29,7 +29,6 @@
 
 
 /* Functions ------------------------------------------------------------------*/
-extern void user_main(void *p);
 
 /**
   * @note   Main program.
@@ -43,15 +42,18 @@ int main(void)
     Sys_Config();
 
 #ifdef USE_OS
+    extern int rtos_init(void);
+    rtos_init();
 
+    log_e("never get here");
 #else
+    extern void user_main(void *p);
     user_main(NULL);
 #endif
 
     while(1)
     {
 #ifdef USE_OS
-        log_e("never get here");
 #else
         log_d("led on");
         delay_ms(1000);

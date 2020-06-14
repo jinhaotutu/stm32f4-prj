@@ -41,6 +41,7 @@
 									<listOptionValue builtIn="false" value="STM32F407ZGTx"/>
 									<listOptionValue builtIn="false" value="STM32F40_41xxx"/>
 									<listOptionValue builtIn="false" value="USE_STDPERIPH_DRIVER"/>
+									<listOptionValue builtIn="false" value="USE_OS"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.394116095" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../../../user"/>
@@ -51,6 +52,9 @@
 									<listOptionValue builtIn="false" value="&quot;../../../..\thirdlib\EasyLogger\easylogger\inc&quot;"/>
 									<listOptionValue builtIn="false" value="../../../../fwlib/inc"/>
 									<listOptionValue builtIn="false" value="../../../../driver"/>
+									<listOptionValue builtIn="false" value="&quot;../../../..\thirdlib\FreeRTOSv10.3.1\FreeRTOS\Source\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../../../..\thirdlib\FreeRTOSv10.3.1\FreeRTOS\Source\stm32_port&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../../../..\thirdlib\FreeRTOSv10.3.1\FreeRTOS\Source\stm32_port\GCC\ARM_CM4F&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1395490270" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -79,7 +83,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="thirdlib/EasyLogger/easylogger/plugins|fwlib/src/stm32f4xx_spdifrx.c|fwlib/src/stm32f4xx_sai.c|fwlib/src/stm32f4xx_rng.c|fwlib/src/stm32f4xx_qspi.c|fwlib/src/stm32f4xx_ltdc.c|fwlib/src/stm32f4xx_lptim.c|fwlib/src/stm32f4xx_hash.c|fwlib/src/stm32f4xx_hash_sha1.c|fwlib/src/stm32f4xx_hash_md5.c|fwlib/src/stm32f4xx_fmpi2c.c|fwlib/src/stm32f4xx_fmc.c|fwlib/src/stm32f4xx_flash_ramfunc.c|fwlib/src/stm32f4xx_dsi.c|fwlib/src/stm32f4xx_dma2d.c|fwlib/src/stm32f4xx_dfsdm.c|fwlib/src/stm32f4xx_dbgmcu.c|fwlib/src/stm32f4xx_cryp.c|fwlib/src/stm32f4xx_cryp_tdes.c|fwlib/src/stm32f4xx_cryp_des.c|fwlib/src/stm32f4xx_cryp_aes.c|fwlib/src/stm32f4xx_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_5.c|thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_3.c|thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_2.c|thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_1.c|thirdlib/EasyLogger/easylogger/plugins|fwlib/src/stm32f4xx_spdifrx.c|fwlib/src/stm32f4xx_sai.c|fwlib/src/stm32f4xx_rng.c|fwlib/src/stm32f4xx_qspi.c|fwlib/src/stm32f4xx_ltdc.c|fwlib/src/stm32f4xx_lptim.c|fwlib/src/stm32f4xx_hash.c|fwlib/src/stm32f4xx_hash_sha1.c|fwlib/src/stm32f4xx_hash_md5.c|fwlib/src/stm32f4xx_fmpi2c.c|fwlib/src/stm32f4xx_fmc.c|fwlib/src/stm32f4xx_flash_ramfunc.c|fwlib/src/stm32f4xx_dsi.c|fwlib/src/stm32f4xx_dma2d.c|fwlib/src/stm32f4xx_dfsdm.c|fwlib/src/stm32f4xx_dbgmcu.c|fwlib/src/stm32f4xx_cryp.c|fwlib/src/stm32f4xx_cryp_tdes.c|fwlib/src/stm32f4xx_cryp_des.c|fwlib/src/stm32f4xx_cryp_aes.c|fwlib/src/stm32f4xx_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -153,7 +157,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="fwlib/src/stm32f4xx_hash.c|startup/startup_stm32f40_41xxx.s|thirdlib/EasyLogger/easylogger/plugins|fwlib/src/stm32f4xx_fmc.c|fwlib/src/stm32f4xx_spdifrx.c|fwlib/src/stm32f4xx_sai.c|fwlib/src/stm32f4xx_rng.c|fwlib/src/stm32f4xx_qspi.c|fwlib/src/stm32f4xx_ltdc.c|fwlib/src/stm32f4xx_lptim.c|fwlib/src/stm32f4xx_hash_sha1.c|fwlib/src/stm32f4xx_hash_md5.c|fwlib/src/stm32f4xx_fmpi2c.c|fwlib/src/stm32f4xx_flash_ramfunc.c|fwlib/src/stm32f4xx_dsi.c|fwlib/src/stm32f4xx_dma2d.c|fwlib/src/stm32f4xx_dfsdm.c|fwlib/src/stm32f4xx_dbgmcu.c|fwlib/src/stm32f4xx_cryp.c|fwlib/src/stm32f4xx_cryp_tdes.c|fwlib/src/stm32f4xx_cryp_des.c|fwlib/src/stm32f4xx_cryp_aes.c|fwlib/src/stm32f4xx_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_5.c|thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_3.c|thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_2.c|thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_1.c|fwlib/src/stm32f4xx_hash.c|startup/startup_stm32f40_41xxx.s|thirdlib/EasyLogger/easylogger/plugins|fwlib/src/stm32f4xx_fmc.c|fwlib/src/stm32f4xx_spdifrx.c|fwlib/src/stm32f4xx_sai.c|fwlib/src/stm32f4xx_rng.c|fwlib/src/stm32f4xx_qspi.c|fwlib/src/stm32f4xx_ltdc.c|fwlib/src/stm32f4xx_lptim.c|fwlib/src/stm32f4xx_hash_sha1.c|fwlib/src/stm32f4xx_hash_md5.c|fwlib/src/stm32f4xx_fmpi2c.c|fwlib/src/stm32f4xx_flash_ramfunc.c|fwlib/src/stm32f4xx_dsi.c|fwlib/src/stm32f4xx_dma2d.c|fwlib/src/stm32f4xx_dfsdm.c|fwlib/src/stm32f4xx_dbgmcu.c|fwlib/src/stm32f4xx_cryp.c|fwlib/src/stm32f4xx_cryp_tdes.c|fwlib/src/stm32f4xx_cryp_des.c|fwlib/src/stm32f4xx_cryp_aes.c|fwlib/src/stm32f4xx_cec.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

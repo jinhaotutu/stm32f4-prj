@@ -29,7 +29,13 @@
 #include <elog.h>
 
 #ifdef USE_OS
+#include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+
 static SemaphoreHandle_t log_mutex = NULL;
+static uint32_t tick_base = 0;
 #endif
 
 /**
@@ -46,6 +52,8 @@ ElogErrCode elog_port_init(void) {
     if (log_mutex == NULL){
         result = ELOG_INIT_ERR;
     }
+    
+    tick_base = (uint32_t)xTaskGetTickCount();
 #endif
 
     return result;
@@ -97,7 +105,16 @@ void elog_port_output_unlock(void) {
 const char *elog_port_get_time(void) {
 
     /* add your code here */
-    return "10:08:12";
+    #define TIME_SIZE   20
+    static char time[TIME_SIZE]="10:08:12";
+
+#ifdef USE_OS
+    uint32_t tick = (xTaskGetTickCount() - tick_base)/1000;
+    memset(time, 0, TIME_SIZE);
+    snprintf(time, TIME_SIZE, "%02d:%02d:%02d", tick/3600%24, tick/60%60, tick%60);
+#endif
+
+    return (const char *)time;
 }
 
 /**

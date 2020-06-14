@@ -176,6 +176,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>thirdlib/FreeRTOSv10.3.1</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>thirdlib/cJSON</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -626,6 +631,11 @@
 			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/EasyLogger/easylogger_init.c</locationURI>
 		</link>
 		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>thirdlib/cJSON/LICENSE</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/cJSON/LICENSE</locationURI>
@@ -677,6 +687,11 @@
 		</link>
 		<link>
 			<name>thirdlib/EasyLogger/easylogger/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -759,6 +774,56 @@
 			<name>thirdlib/EasyLogger/easylogger/src/elog_utils.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/EasyLogger/easylogger/src/elog_utils.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/croutine.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/croutine.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/event_groups.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/event_groups.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/list.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/list.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/queue.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/queue.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/readme.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/readme.txt</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stream_buffer.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stream_buffer.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/tasks.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/tasks.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/timers.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/timers.c</locationURI>
 		</link>
 		<link>
 			<name>thirdlib/EasyLogger/docs/en/images/EasyLoggerDemo.gif</name>
@@ -854,6 +919,171 @@
 			<name>thirdlib/EasyLogger/easylogger/plugins/flash/elog_flash_port.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/EasyLogger/easylogger/plugins/flash/elog_flash_port.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/FreeRTOS.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/FreeRTOS.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/StackMacros.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/StackMacros.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/atomic.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/atomic.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/croutine.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/croutine.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/deprecated_definitions.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/deprecated_definitions.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/event_groups.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/event_groups.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/list.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/list.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/message_buffer.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/message_buffer.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/mpu_prototypes.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/mpu_prototypes.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/mpu_wrappers.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/mpu_wrappers.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/portable.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/portable.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/projdefs.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/projdefs.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/queue.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/queue.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/semphr.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/semphr.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/stack_macros.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/stack_macros.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/stdint.readme</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/stdint.readme</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/stream_buffer.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/stream_buffer.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/task.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/task.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/timers.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/include/timers.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/FreeRTOSConfig.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/FreeRTOSConfig.h</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/GCC</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/license.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/license.txt</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/stm_config.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/stm_config.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/GCC/ARM_CM4F</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/ReadMe.url</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/ReadMe.url</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_1.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_1.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_2.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_2.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_3.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_3.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_4.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_4.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_5.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/MemMang/heap_5.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/GCC/ARM_CM4F/port.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/GCC/ARM_CM4F/port.c</locationURI>
+		</link>
+		<link>
+			<name>thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/GCC/ARM_CM4F/portmacro.h</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/thirdlib/FreeRTOSv10.3.1/FreeRTOS/Source/stm32_port/GCC/ARM_CM4F/portmacro.h</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

@@ -28,6 +28,18 @@
 /* log */
 #include "elog.h"
 
+/* os */
+#ifdef USE_OS
+#include "FreeRTOSConfig.h"
+
+#define RTOS_PRIORITY_HIGHEST       (10)
+#define RTOS_PRIORITY_LEVEL_1ST     (9)
+#define RTOS_PRIORITY_LEVEL_2ST     (8)
+#define RTOS_PRIORITY_LEVEL_3ST     (7)
+#define RTOS_PRIORITY_LEVEL_4ST     (6)
+#define RTOS_PRIORITY_LEVEL_5ST     (5)
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
