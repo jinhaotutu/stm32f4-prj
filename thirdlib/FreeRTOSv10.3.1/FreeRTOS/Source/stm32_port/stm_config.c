@@ -79,7 +79,7 @@ int rtos_init(void)
 
     BaseType_t xReturn = pdPASS;
 
-    log_i("Freertos v10.2.1 start ");
+    log_i("Freertos v10.3.1 start ");
 
     /* first creat task in this 创建rtos第一个任务，用于创建其他任务 */
     xReturn = xTaskCreate(  (TaskFunction_t )creat_task,
