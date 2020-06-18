@@ -86,7 +86,7 @@ int rtos_init(void)
                             (const char *   )"creat_task",
                             (unsigned short )1024,
                             (void *         )NULL,
-                            (UBaseType_t    )RTOS_PRIORITY_LEVEL_5ST,
+                            (UBaseType_t    )1,
                             (TaskHandle_t * )&xTask_creat);
 
     if (pdPASS != xReturn){

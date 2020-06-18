@@ -127,14 +127,5 @@ standard names. */
 #define xPortPendSVHandler PendSV_Handler
 // #define xPortSysTickHandler SysTick_Handler
 
-
-/* user config code */
-#define RTOS_PRIORITY_HIGHEST       (10)
-#define RTOS_PRIORITY_LEVEL_1ST     (9)
-#define RTOS_PRIORITY_LEVEL_2ST     (8)
-#define RTOS_PRIORITY_LEVEL_3ST     (7)
-#define RTOS_PRIORITY_LEVEL_4ST     (6)
-#define RTOS_PRIORITY_LEVEL_5ST     (5)
-
 #endif /* FREERTOS_CONFIG_H */
 
