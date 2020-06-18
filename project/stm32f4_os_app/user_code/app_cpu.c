@@ -51,9 +51,11 @@ static void task_cpu_cb(void *p)
 
         log_raw("\r\n------------- cpu info -------------\r\n");
 
+#if (defined configUSE_TRACE_FACILITY) && (configUSE_TRACE_FACILITY == 1)
         vTaskList((char *)CPU_info);
         log_raw("\r\nname        state  priority  stack   num\r\n");
         log_raw("%s", CPU_info);
+#endif
 
 #if (defined configGENERATE_RUN_TIME_STATS) && (configGENERATE_RUN_TIME_STATS == 1)
         memset(CPU_info, 0, 1024);

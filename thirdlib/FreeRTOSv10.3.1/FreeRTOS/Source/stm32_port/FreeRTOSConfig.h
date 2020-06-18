@@ -43,8 +43,8 @@
 
 /* Ensure stdint is only used by the compiler, and not the assembler. */
 #if defined (__ICCARM__) || defined (__CC_ARM) || defined (__GNUC__)
-	#include <stdint.h>
-	extern uint32_t SystemCoreClock;
+    #include <stdint.h>
+    extern uint32_t SystemCoreClock;
 #endif
 
 #ifndef USE_OS
@@ -66,7 +66,7 @@
 /* RTOS API(资源使能与裁剪) */
 #define configUSE_MUTEXES               1       //使能互斥锁
 #define configUSE_RECURSIVE_MUTEXES     1       //使能递归互斥锁
-//#define configUSE_TASK_NOTIFICATIONS    1       //使能任务间通讯，及信号量、事件、邮箱
+#define configUSE_TASK_NOTIFICATIONS    1       //使能任务间通知
 #define configUSE_COUNTING_SEMAPHORES   1       //使能计数信号量
 #define configUSE_QUEUE_SETS            1       //使能消息队列
 #define configQUEUE_REGISTRY_SIZE       8       //设置消息队列的个数
@@ -96,22 +96,24 @@ to exclude the API function. (使能任务相关api) */
 
 
 /* RTOS TASK DEBUG(任务资源调试) */
-#define configUSE_TRACE_FACILITY                1       //使能任务可视化追踪
-#define configUSE_STATS_FORMATTING_FUNCTIONS    1
+#ifdef OS_DEBUG
+    #define configUSE_TRACE_FACILITY                1       //使能任务可视化追踪
+    #define configUSE_STATS_FORMATTING_FUNCTIONS    1
 
-#define configGENERATE_RUN_TIME_STATS   0               //使能任务状态统计函数-计算任务占用率
-#if (defined configGENERATE_RUN_TIME_STATS) && (configGENERATE_RUN_TIME_STATS == 1)
-    #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()  rtos_sys_timer_init()
-    #define portGET_RUN_TIME_COUNTER_VALUE()          rtos_sys_cnt_get()
+    #define configGENERATE_RUN_TIME_STATS   0               //使能任务状态统计函数-计算任务占用率
+    #if (defined configGENERATE_RUN_TIME_STATS) && (configGENERATE_RUN_TIME_STATS == 1)
+        #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()  rtos_sys_timer_init()
+        #define portGET_RUN_TIME_COUNTER_VALUE()          rtos_sys_cnt_get()
+    #endif
 #endif
 
 
 /* Cortex-M specific definitions. (stm32与os相关中断优先级的配置) */
 #ifdef __NVIC_PRIO_BITS
-	/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
-	#define configPRIO_BITS       		__NVIC_PRIO_BITS
+    /* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
+    #define configPRIO_BITS       		__NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS       		4        /* 15 priority levels */
+    #define configPRIO_BITS       		4        /* 15 priority levels */
 #endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority"
@@ -135,9 +137,9 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. (断言) */
 #ifdef OS_DEBUG
-#include "elog.h"
-#define OS_ASSERT(x)       log_e(x)
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); OS_ASSERT("os err"); for( ;; ); }
+    #include "elog.h"
+    #define OS_ASSERT(x)       log_e(x)
+    #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); OS_ASSERT("os err"); for( ;; ); }
 #endif
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
@@ -149,12 +151,12 @@ standard names. */
 
 /* user config code (用户自定义配置) */
 #if (configMAX_PRIORITIES > 6)
-#define RTOS_PRIORITY_HIGHEST       (configMAX_PRIORITIES-1)
-#define RTOS_PRIORITY_LEVEL_1ST     (configMAX_PRIORITIES-2)
-#define RTOS_PRIORITY_LEVEL_2ST     (configMAX_PRIORITIES-3)
-#define RTOS_PRIORITY_LEVEL_3ST     (configMAX_PRIORITIES-4)
-#define RTOS_PRIORITY_LEVEL_4ST     (configMAX_PRIORITIES-5)
-#define RTOS_PRIORITY_LEVEL_5ST     (configMAX_PRIORITIES-6)
+    #define RTOS_PRIORITY_HIGHEST       (configMAX_PRIORITIES-1)
+    #define RTOS_PRIORITY_LEVEL_1ST     (configMAX_PRIORITIES-2)
+    #define RTOS_PRIORITY_LEVEL_2ST     (configMAX_PRIORITIES-3)
+    #define RTOS_PRIORITY_LEVEL_3ST     (configMAX_PRIORITIES-4)
+    #define RTOS_PRIORITY_LEVEL_4ST     (configMAX_PRIORITIES-5)
+    #define RTOS_PRIORITY_LEVEL_5ST     (configMAX_PRIORITIES-6)
 #endif
 
 #endif /* FREERTOS_CONFIG_H */
