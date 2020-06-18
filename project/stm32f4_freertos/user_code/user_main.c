@@ -74,7 +74,7 @@ int led_task_init(void)
                             (const char *   )"led_task",
                             (unsigned short )1024,
                             (void *         )NULL,
-                            (UBaseType_t    )RTOS_PRIORITY_LEVEL_2ST,
+                            (UBaseType_t    )3,
                             (TaskHandle_t * )&led_handle);
 
     if (pdPASS != xReturn){
@@ -120,7 +120,7 @@ int cnt_task_init(void)
                             (const char *   )"cnt_task",
                             (unsigned short )1024,
                             (void *         )NULL,
-                            (UBaseType_t    )RTOS_PRIORITY_LEVEL_2ST,
+                            (UBaseType_t    )2,
                             (TaskHandle_t * )&cnt_handle);
 
     if (pdPASS != xReturn){

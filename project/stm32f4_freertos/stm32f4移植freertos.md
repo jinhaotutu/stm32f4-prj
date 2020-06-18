@@ -210,15 +210,6 @@ standard names. */
 #define xPortPendSVHandler PendSV_Handler
 // #define xPortSysTickHandler SysTick_Handler
 
-
-/* user config code 额外定义了常用优先级的宏定义 */
-#define RTOS_PRIORITY_HIGHEST       (10)
-#define RTOS_PRIORITY_LEVEL_1ST     (9)
-#define RTOS_PRIORITY_LEVEL_2ST     (8)
-#define RTOS_PRIORITY_LEVEL_3ST     (7)
-#define RTOS_PRIORITY_LEVEL_4ST     (6)
-#define RTOS_PRIORITY_LEVEL_5ST     (5)
-
 #endif /* FREERTOS_CONFIG_H */
 
 
@@ -320,7 +311,7 @@ standard names. */
                                (const char *   )"creat_task",
                                (unsigned short )1024,
                                (void *         )NULL,
-                               (UBaseType_t    )RTOS_PRIORITY_LEVEL_5ST,
+                               (UBaseType_t    )1,
                                (TaskHandle_t * )&xTask_creat);
    
        if (pdPASS != xReturn){
@@ -445,7 +436,7 @@ int rtos_init(void)
                             (const char *   )"creat_task",
                             (unsigned short )1024,
                             (void *         )NULL,
-                            (UBaseType_t    )RTOS_PRIORITY_LEVEL_5ST,
+                            (UBaseType_t    )1,
                             (TaskHandle_t * )&xTask_creat);
 
     if (pdPASS != xReturn){
