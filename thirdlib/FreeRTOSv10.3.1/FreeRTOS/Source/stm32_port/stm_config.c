@@ -49,7 +49,7 @@ static void creat_task(void *p)
     taskEXIT_CRITICAL();
     /* creat app task in this 在这里创建应用任务 */
 
-#if 1
+#if 0
     /* delay task 延时退出，并删除本任务 */
     while(1){
         log_d("this is creat task:idle-%d", cnt++);
@@ -86,7 +86,7 @@ int rtos_init(void)
                             (const char *   )"creat_task",
                             (unsigned short )1024,
                             (void *         )NULL,
-                            (UBaseType_t    )RTOS_PRIORITY_LEVEL_5ST,
+                            (UBaseType_t    )1,
                             (TaskHandle_t * )&xTask_creat);
 
     if (pdPASS != xReturn){

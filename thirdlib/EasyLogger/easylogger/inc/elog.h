@@ -228,7 +228,7 @@ void elog_hexdump(const char *name, uint8_t width, uint8_t *buf, uint16_t size);
     #define LOG_LVL          ELOG_LVL_VERBOSE
 #endif
 #if LOG_LVL >= ELOG_LVL_ASSERT
-    #define log_a(...)       elog_a(LOG_TAG, __VA_ARGS__)
+    #define log_a(...)       elog_a("assert ", __VA_ARGS__)
 #else
     #define log_a(...)       ((void)0);
 #endif
@@ -238,7 +238,7 @@ void elog_hexdump(const char *name, uint8_t width, uint8_t *buf, uint16_t size);
     #define log_e(...)       ((void)0);
 #endif
 #if LOG_LVL >= ELOG_LVL_WARN
-    #define log_w(...)       elog_w(LOG_TAG, __VA_ARGS__)
+    #define log_w(...)       elog_w("warn ", __VA_ARGS__)
 #else
     #define log_w(...)       ((void)0);
 #endif
