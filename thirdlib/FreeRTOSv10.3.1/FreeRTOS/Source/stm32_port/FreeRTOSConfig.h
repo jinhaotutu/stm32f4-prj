@@ -60,7 +60,7 @@
 #define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 75 * 1024 ) ) //RTOS内存堆大小
 #define configMAX_TASK_NAME_LEN         ( 10 )                       //任务名称最大长度
 #define configUSE_16_BIT_TICKS          0       //数据类型长度定义，32位为0，16位或8位开启
-#define configIDLE_SHOULD_YIELD         1       //使能与空闲任务优先级相同的任务
+#define configIDLE_SHOULD_YIELD         0       //使能与空闲任务优先级相同的任务
 
 
 /* RTOS API(资源使能与裁剪) */
@@ -70,29 +70,38 @@
 #define configUSE_COUNTING_SEMAPHORES   1       //使能计数信号量
 #define configUSE_QUEUE_SETS            1       //使能消息队列
 #define configQUEUE_REGISTRY_SIZE       8       //设置消息队列的个数
+#define configSUPPORT_STATIC_ALLOCATION 1       //
 
 #define configUSE_TIMERS                1       //使能定时器
-#define configTIMER_TASK_PRIORITY       ( 2 )
-#define configTIMER_QUEUE_LENGTH        10
-#define configTIMER_TASK_STACK_DEPTH    ( configMINIMAL_STACK_SIZE * 2 )
+#if configUSE_TIMERS
+    #define configTIMER_TASK_PRIORITY           ( 2 )
+    #define configTIMER_QUEUE_LENGTH            10
+    #define configTIMER_TASK_STACK_DEPTH        ( configMINIMAL_STACK_SIZE * 2 )
+    #define configUSE_DAEMON_TASK_STARTUP_HOOK  0
+#endif
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. (使能任务相关api) */
 #define INCLUDE_vTaskPrioritySet        1
 #define INCLUDE_uxTaskPriorityGet       1
 #define INCLUDE_vTaskDelete             1
-#define INCLUDE_vTaskCleanUpResources   1
+#define INCLUDE_vTaskCleanUpResources   0
 #define INCLUDE_vTaskSuspend            1
 #define INCLUDE_vTaskDelayUntil         1
 #define INCLUDE_vTaskDelay              1
 
+#define INCLUDE_xTaskGetIdleTaskHandle          0
+#define INCLUDE_xTaskGetCurrentTaskHandle       1
+#define INCLUDE_uxTaskGetStackHighWaterMark     1
+#define INCLUDE_xTaskGetSchedulerState          1
+
 
 /* RTOS HOOK(功能钩子函数) */
-#define configUSE_IDLE_HOOK             0       //空闲函数钩子函数
-#define configUSE_TICKLESS_IDLE         0       //空闲函数低功耗功能使能
+#define configUSE_IDLE_HOOK             1       //空闲函数钩子函数
+#define configUSE_TICKLESS_IDLE         1       //空闲函数低功耗功能使能
 #define configUSE_TICK_HOOK             0       //tick时钟钩子函数
-#define configUSE_MALLOC_FAILED_HOOK    0       //内存申请失败的钩子函数
-#define configCHECK_FOR_STACK_OVERFLOW  0       //任务栈溢出检测
+#define configUSE_MALLOC_FAILED_HOOK    1       //内存申请失败的钩子函数
+#define configCHECK_FOR_STACK_OVERFLOW  2       //任务栈溢出检测
 
 
 /* RTOS TASK DEBUG(任务资源调试) */
@@ -107,31 +116,34 @@ to exclude the API function. (使能任务相关api) */
     #endif
 #endif
 
+/* Co-routine definitions. */
+#define configUSE_CO_ROUTINES                        0
+#define configMAX_CO_ROUTINE_PRIORITIES              ( 2 )
 
 /* Cortex-M specific definitions. (stm32与os相关中断优先级的配置) */
 #ifdef __NVIC_PRIO_BITS
     /* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
-    #define configPRIO_BITS       		__NVIC_PRIO_BITS
+    #define configPRIO_BITS             __NVIC_PRIO_BITS
 #else
-    #define configPRIO_BITS       		4        /* 15 priority levels */
+    #define configPRIO_BITS             4        /* 15 priority levels */
 #endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority"
 function. */
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0xf
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY         0xf
 
 /* The highest interrupt priority that can be used by any interrupt service
 routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
 INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
 PRIORITY THAN THIS! (higher priorities are lower numeric values. */
-#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY    5
 
 /* Interrupt priorities used by the kernel port layer itself.  These are generic
 to all Cortex-M ports, and do not rely on any particular library functions. */
-#define configKERNEL_INTERRUPT_PRIORITY 		( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+#define configKERNEL_INTERRUPT_PRIORITY         ( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 
 
 /* Normal assert() semantics without relying on the provision of an assert.h
@@ -149,6 +161,9 @@ standard names. */
 // #define xPortSysTickHandler SysTick_Handler
 
 
+/* others */
+
+
 /* user config code (用户自定义配置) */
 #if (configMAX_PRIORITIES > 6)
     #define RTOS_PRIORITY_HIGHEST       (configMAX_PRIORITIES-1)
@@ -158,6 +173,7 @@ standard names. */
     #define RTOS_PRIORITY_LEVEL_4ST     (configMAX_PRIORITIES-5)
     #define RTOS_PRIORITY_LEVEL_5ST     (configMAX_PRIORITIES-6)
 #endif
+
 
 #endif /* FREERTOS_CONFIG_H */
 
