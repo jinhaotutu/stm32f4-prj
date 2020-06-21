@@ -72,8 +72,6 @@ static void timer1_cb(void *p)
   */
 BaseType_t timer_init(void)
 {
-    BaseType_t xReturn = pdPASS;
-
     log_d("app task creat");
 
     timer_1 = xTimerCreate((const char *)"timer_1",

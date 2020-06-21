@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "stm32-jlink",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/stm32f4_linux_mk/obj/stm32f4-mk.elf",
+            "device": "STM32F407ZG",
+            "interface": "swd",
+            "preLaunchTask": "only_build",
+            "armToolchainPath": "${workspaceFolder}/stm32f4_linux_mk/obj/tools/gcc-arm-none-eabi/bin/",
+            "ipAddress": null,
+            "serialNumber": null,
+        }
+    ]
+}

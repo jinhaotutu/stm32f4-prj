@@ -54,7 +54,6 @@ static uint32_t mutex_cnt = 0;
 static void task_mutex_1_cb(void *p)
 {
     log_d("%s", __FUNCTION__);
-    BaseType_t xReturn = pdTRUE;
     uint32_t cnt = 0;
 
     while(1){
@@ -89,7 +88,6 @@ static void task_mutex_1_cb(void *p)
 static void task_mutex_2_cb(void *p)
 {
     log_d("%s", __FUNCTION__);
-    BaseType_t xReturn = pdTRUE;
     uint32_t cnt = 0;
 
     while(1){

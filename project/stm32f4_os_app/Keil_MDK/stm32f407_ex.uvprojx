@@ -330,7 +330,7 @@
             <vShortWch>1</vShortWch>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,USE_OS,OS_DEBUG</Define>
+              <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,USE_OS,OS_DEBUG=1,OS_HOOK</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\driver;..\..\..\fwlib\inc;..\..\..\misis;..\user_code;..\..\..\sys;..\..\..\user;..\..\..\thirdlib\cJSON;..\..\..\thirdlib\EasyLogger\easylogger\inc;..\..\..\thirdlib\FreeRTOSv10.3.1\FreeRTOS\Source\include;..\..\..\thirdlib\FreeRTOSv10.3.1\FreeRTOS\Source\stm32_port;..\..\..\thirdlib\FreeRTOSv10.3.1\FreeRTOS\Source\stm32_port\RVDS\ARM_CM4F</IncludePath>
             </VariousControls>

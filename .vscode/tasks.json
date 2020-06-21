@@ -1,0 +1,80 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                "${workspaceFolder}/stm32f4_linux_mk/user/build.sh",
+                "${input:app_name}",
+                "${input:app_ver}",
+                "loadbin",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "only_build",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                "${workspaceFolder}/stm32f4_linux_mk/user/build.sh",
+                "${input:app_name}",
+                "${input:app_ver}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "download",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                "${workspaceFolder}/stm32f4_linux_mk/user/load.sh",
+                "${workspaceFolder}/stm32f4_linux_mk/user/${input:app_name}/output/1.0.0/${input:app_name}_app_v${input:app_ver}.bin"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        //通过下拉框来选择工程名，新增需要在options里面新增---
+        {
+            "id": "app_name",
+            "type": "pickString",
+            "description": "请选择工程名",
+            "options": [
+                "stm32_single",
+                "stm32_rtos_single",
+                "stm32_lwip_withos",
+                "stm32_socket",
+            ],
+            "default": "stm32_single"
+        },
+        //---------------------------------------------
+        //通过输入工程名来设置，如需要这种，注释上面，取消下面的注释
+        // {
+        //     "id": "app_name",
+        //     "type":"promptString",
+        //     "description": "请输入user目录下的工程名",
+        //     "default": "stm32_single"
+        // },
+        //---------------------------------------------
+        {
+            "id": "app_ver",
+            "type":"promptString",
+            "description": "请输入版本号",
+            "default": "1.0.0"
+        }
+    ]
+}

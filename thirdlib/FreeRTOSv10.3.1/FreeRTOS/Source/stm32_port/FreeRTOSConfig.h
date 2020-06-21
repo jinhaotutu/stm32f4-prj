@@ -68,9 +68,8 @@
 #define configUSE_RECURSIVE_MUTEXES     1       //使能递归互斥锁
 #define configUSE_TASK_NOTIFICATIONS    1       //使能任务间通知
 #define configUSE_COUNTING_SEMAPHORES   1       //使能计数信号量
-#define configUSE_QUEUE_SETS            1       //使能消息队列
-#define configQUEUE_REGISTRY_SIZE       8       //设置消息队列的个数
-#define configSUPPORT_STATIC_ALLOCATION 1       //
+#define configUSE_QUEUE_SETS            1       //使能队列集
+#define configQUEUE_REGISTRY_SIZE       8       //设置队列注册的个数
 
 #define configUSE_TIMERS                1       //使能定时器
 #if configUSE_TIMERS
@@ -97,23 +96,35 @@ to exclude the API function. (使能任务相关api) */
 
 
 /* RTOS HOOK(功能钩子函数) */
-#define configUSE_IDLE_HOOK             1       //空闲函数钩子函数
-#define configUSE_TICKLESS_IDLE         1       //空闲函数低功耗功能使能
-#define configUSE_TICK_HOOK             0       //tick时钟钩子函数
-#define configUSE_MALLOC_FAILED_HOOK    1       //内存申请失败的钩子函数
-#define configCHECK_FOR_STACK_OVERFLOW  2       //任务栈溢出检测
+#ifdef OS_HOOK
+    #define configUSE_IDLE_HOOK             1       //空闲任务钩子函数
+    #define configUSE_TICKLESS_IDLE         0       //空闲任务低功耗功能使能
+    #define configUSE_TICK_HOOK             0       //tick时钟钩子函数
+    #define configUSE_MALLOC_FAILED_HOOK    1       //内存申请失败的钩子函数
+    #define configCHECK_FOR_STACK_OVERFLOW  2       //任务栈溢出检测
+    #define configSUPPORT_STATIC_ALLOCATION 0       //额外静态任务创建，需添加额外函数
+#else
+    #define configUSE_IDLE_HOOK             0       //空闲函数钩子函数
+    #define configUSE_TICK_HOOK             0       //tick时钟钩子函数
+#endif
 
 
 /* RTOS TASK DEBUG(任务资源调试) */
-#ifdef OS_DEBUG
+#if (defined OS_DEBUG) && (OS_DEBUG == 1)
     #define configUSE_TRACE_FACILITY                1       //使能任务可视化追踪
     #define configUSE_STATS_FORMATTING_FUNCTIONS    1
 
-    #define configGENERATE_RUN_TIME_STATS   0               //使能任务状态统计函数-计算任务占用率
+    #define configGENERATE_RUN_TIME_STATS   1               //使能任务状态统计函数-计算任务占用率
     #if (defined configGENERATE_RUN_TIME_STATS) && (configGENERATE_RUN_TIME_STATS == 1)
         #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()  rtos_sys_timer_init()
         #define portGET_RUN_TIME_COUNTER_VALUE()          rtos_sys_cnt_get()
     #endif
+
+    /* Normal assert() semantics without relying on the provision of an assert.h
+    header file. (断言) */
+    #include "elog.h"
+    #define OS_ASSERT(x)       log_e(x)
+    #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); OS_ASSERT("os err"); for( ;; ); }
 #endif
 
 /* Co-routine definitions. */
@@ -145,14 +156,6 @@ to all Cortex-M ports, and do not rely on any particular library functions. */
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 
-
-/* Normal assert() semantics without relying on the provision of an assert.h
-header file. (断言) */
-#ifdef OS_DEBUG
-    #include "elog.h"
-    #define OS_ASSERT(x)       log_e(x)
-    #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); OS_ASSERT("os err"); for( ;; ); }
-#endif
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */

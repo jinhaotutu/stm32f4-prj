@@ -196,6 +196,36 @@
 			<locationURI>PARENT-3-PROJECT_LOC/user/main.h</locationURI>
 		</link>
 		<link>
+			<name>user_code/app_cpu.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/user_code/app_cpu.c</locationURI>
+		</link>
+		<link>
+			<name>user_code/app_event.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/user_code/app_event.c</locationURI>
+		</link>
+		<link>
+			<name>user_code/app_message.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/user_code/app_message.c</locationURI>
+		</link>
+		<link>
+			<name>user_code/app_mutex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/user_code/app_mutex.c</locationURI>
+		</link>
+		<link>
+			<name>user_code/app_sem.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/user_code/app_sem.c</locationURI>
+		</link>
+		<link>
+			<name>user_code/app_timer.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/user_code/app_timer.c</locationURI>
+		</link>
+		<link>
 			<name>user_code/user_main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/user_code/user_main.c</locationURI>

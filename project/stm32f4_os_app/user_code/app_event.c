@@ -49,7 +49,6 @@ static EventGroupHandle_t event_demo = NULL;
 static void task_event_rev2_cb(void *p)
 {
     log_d("%s", __FUNCTION__);
-    BaseType_t xReturn = pdTRUE;
     EventBits_t event_t;
 
     while(1){
@@ -78,7 +77,6 @@ static void task_event_rev2_cb(void *p)
 static void task_event_rev1_cb(void *p)
 {
     log_d("%s", __FUNCTION__);
-    BaseType_t xReturn = pdTRUE;
     EventBits_t event_t;
 
     while(1){
@@ -101,7 +99,6 @@ static void task_event_rev1_cb(void *p)
 static void task_event_post_cb(void *p)
 {
     log_d("%s", __FUNCTION__);
-    BaseType_t xReturn = pdTRUE;
 
     while(1){
         vTaskDelay(1000);

@@ -36,6 +36,12 @@
 static TaskHandle_t led_handle;
 
 /* Functions ------------------------------------------------------------------*/
+extern BaseType_t cpu_task_init(void);
+extern BaseType_t sem_init(void);
+extern BaseType_t message_init(void);
+extern BaseType_t mutex_init(void);
+extern BaseType_t timer_init(void);
+extern BaseType_t event_init(void);
 
 /**
   * @note   led task
@@ -55,6 +61,9 @@ static void led_task(void *p)
         led_driver_write(&flag, 1);
         log_d("led status is %s", flag?"on":"off");
         vTaskDelay(1000);
+
+        log_i("free head size:%d", xPortGetFreeHeapSize());
+        log_i("min head size:%d", xPortGetMinimumEverFreeHeapSize());
     }
 }
 
