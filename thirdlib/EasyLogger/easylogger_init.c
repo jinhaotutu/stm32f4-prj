@@ -8,7 +8,7 @@
   */
 void easy_logger_init(void)
 {
-    printf("\r\n\r\n");
+    printf("\r\n");
     /* initialize EasyLogger */
     elog_init();
 

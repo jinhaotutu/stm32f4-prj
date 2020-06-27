@@ -98,6 +98,24 @@ static void log_uart_init(void)
 }
 
 /**
+  * @note   system_info
+  * @brief  printf system info
+  * @param  None
+  * @retval None
+  */
+static void system_info(void)
+{
+    os_printf("***********STM32 System Config!***********");
+
+    RCC_ClocksTypeDef get_rcc_clock;
+    RCC_GetClocksFreq(&get_rcc_clock);
+    os_printf("SYSCLK:%d", get_rcc_clock.SYSCLK_Frequency);
+    os_printf("HCLK:%d", get_rcc_clock.HCLK_Frequency);
+    os_printf("PCLK1:%d", get_rcc_clock.PCLK1_Frequency);
+    os_printf("PCLK2:%d", get_rcc_clock.PCLK2_Frequency);
+}
+
+/**
   * @note   Sys_Config
   * @brief  system init
   * @param  None
@@ -116,7 +134,7 @@ void Sys_Config(void)
     Delay_Config();
 #endif
 
-    os_printf("***********STM32 System Config!***********");
+    system_info();
 
     /* driver init */
     extern void led_driver_init(void);

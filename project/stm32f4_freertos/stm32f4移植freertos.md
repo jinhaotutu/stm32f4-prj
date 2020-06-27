@@ -60,10 +60,10 @@ ps：上述是freertos源文件目录，一些用不到的目录做了一些过�
 	#include <stdint.h>
 	extern uint32_t SystemCoreClock;
 #endif
-// 修改后：增加不同编译环境的配置
+// 修改后：增加不同编译环境的配置，同时配置系统主频与 SystemCoreClock 一致，可以参照工程 rcc_init
 #if defined (__ICCARM__) || defined (__CC_ARM) || defined (__GNUC__)
 	#include <stdint.h>
-	extern uint32_t SystemCoreClock;
+	extern uint32_t SystemCoreClock;        //168MHz for stm32f4
 #endif
 
 // 2. ------------------------------------------------------
@@ -504,8 +504,7 @@ ps：为什么要重新创建一个 stm_config.c 文件？因为将所有有关 
 
 ---
 
-如有其它移植上面的问题自己问我哦~后续会对移植相关及freertos部分源码进行解析，深入理解才可以更好的运用。
-
+如有其它移植上面的问题可以问我哦~后续会对移植相关及freertos部分源码进行解析，深入理解才可以更好的运用。
 
 <img src="https://img-blog.csdnimg.cn/20200507175326677.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3EzNjE3NTAzODk=,size_16,color_FFFFFF,t_70#pic_center" width=300 height=330> 
 

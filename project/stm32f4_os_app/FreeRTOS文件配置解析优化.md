@@ -2,11 +2,11 @@
 
 ---
 
-**本篇目标：基于[上一篇的移植freertos(stm32f4_freertos)]()上，修改 FreeRTOSConfig.h 文件的相关配置来优化辅助 FreeRtos 的使用，并且建立一些基本功能（信号量、消息地列等）的简单应用位于(stm32f4_os_app)工程。**
+**本篇目标：基于[上一篇的移植freertos(stm32f4_freertos)](https://blog.csdn.net/q361750389/article/details/106755214)上，修改 FreeRTOSConfig.h 文件的相关配置来优化辅助 FreeRtos 的使用，并且建立一些基本功能（信号量、消息地列等）的简单应用位于(stm32f4_os_app)工程。**
 
 资料准备：
 
-- 最后工程：[项目工程(github分支)]() project 文件夹下的 stm32f4_os_app 工程。
+- 最后工程：[项目工程(github分支)](https://github.com/jinhaotutu/stm32f4-prj/tree/stm32_os_app) project 文件夹下的 stm32f4_os_app 工程。
 
 ---
 
@@ -16,7 +16,7 @@
 
 所以这篇中的工程将 FreeRTOSConfig.h 进行了配置的修改与优化，并且注释了常用的宏定义的用途，详细的也会在下面进行解析，初步来看下相关的配置。
 
-首先将 FreeRTOSConfig.h 的配置分成几部分：
+**首先将 FreeRTOSConfig.h 的配置分成几部分：**
 
 - FreeRTOS 与系统有关的配置
 - FreeRTOS 与功能api相关的配置
@@ -226,7 +226,37 @@
 - FreeRTOS 与系统优先级相关的配置：
 
   ```c
+  /* stm32与os相关中断优先级的配置，由stm32手册以及头文件可知支持优先级为4bit，所以下面配置为4，并且系统初始化的时候需要设置中断分组配置：NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4); */
+  #ifdef __NVIC_PRIO_BITS
+      /* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
+      #define configPRIO_BITS             __NVIC_PRIO_BITS
+  #else
+      #define configPRIO_BITS             4        /* 15 priority levels */
+  #endif
   
+  /* The lowest interrupt priority that can be used in a call to a "set priority"
+  function. */
+  #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY         0xf
+  
+  /* The highest interrupt priority that can be used by any interrupt service
+  routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
+  INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
+  PRIORITY THAN THIS! (higher priorities are lower numeric values. */
+  #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY    5
+  
+  /* 以上两个为RTOS配置的优先级区间，从最大到最小，所以注意所有需要在中断里调用RTOS的api的时候，
+   * 这个中断的优先级一定要在上面这个区间内，否则就会出现断言错误，系统也无法正常调度。
+   * --------------------------------------------------------------------
+   * 下面两个优先级为转换后的优先级数据，因为上面的4bit优先级占据寄存器的高4位，
+   * 所以下面需要进行移位转换
+   */
+  
+  /* Interrupt priorities used by the kernel port layer itself.  These are generic
+  to all Cortex-M ports, and do not rely on any particular library functions. */
+  #define configKERNEL_INTERRUPT_PRIORITY         ( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+  /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
+  See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
+  #define configMAX_SYSCALL_INTERRUPT_PRIORITY    ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
   ```
 
 - FreeRTOS 应用自定义配置：
@@ -734,12 +764,19 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer,
 ## 功能简单应用
 
 在 stm32f4_os_app 工程中，建立了有关任务、信号量、消息队列、互斥锁、定时器、事件通知的简单应用。工程及运行情况如下：
-
-![image-20200621234419100](C:\Users\jinhao\AppData\Roaming\Typora\typora-user-images\image-20200621234419100.png)
-
-![image-20200621235149271](C:\Users\jinhao\AppData\Roaming\Typora\typora-user-images\image-20200621235149271.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200622151447558.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3EzNjE3NTAzODk=,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200622151506576.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3EzNjE3NTAzODk=,size_16,color_FFFFFF,t_70)
 
 ---
 
 ### 小结
 
+这次只是介绍了常用的一些系统配置，这样就可以初步得知道Freertos各方面的功能，也方便以后实际使用。一般大家都喜欢由浅入深，这也是便于理解的方式，先知道功能与使用方法，用于正常开发，再在其他的时间深入功能具体实现的方式。工程也包括了经常会用到的基本功能，可以通过开关宏定义来试着尝试一下。
+
+---
+
+如有其它问题可以问我哦~
+
+<img src="https://img-blog.csdnimg.cn/20200507175326677.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3EzNjE3NTAzODk=,size_16,color_FFFFFF,t_70#pic_center" width=300 height=330> 
+
+Tuu
