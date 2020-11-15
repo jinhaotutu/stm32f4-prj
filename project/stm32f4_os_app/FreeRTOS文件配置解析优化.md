@@ -50,7 +50,7 @@
   #define configMINIMAL_STACK_SIZE        ( ( unsigned short ) 130 )
   
   /* 整个 Freertos 内存堆的大小 */
-  #define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 75 * 1024 ) )
+  #define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 100 * 1024 ) )
   
   /* 任务名称最大长度 */
   #define configMAX_TASK_NAME_LEN         ( 10 )
@@ -335,7 +335,7 @@
 #define configTICK_RATE_HZ              ( ( TickType_t ) 1000 )      //RTOS运行tick时钟
 #define configMAX_PRIORITIES            ( 10 )                       //RTOS最大优先级
 #define configMINIMAL_STACK_SIZE        ( ( unsigned short ) 130 )   //RTOS任务最小栈大小
-#define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 75 * 1024 ) ) //RTOS内存堆大小
+#define configTOTAL_HEAP_SIZE           ( ( size_t ) ( 100 * 1024 ) ) //RTOS内存堆大小
 #define configMAX_TASK_NAME_LEN         ( 10 )                       //任务名称最大长度
 #define configUSE_16_BIT_TICKS          0       //数据类型长度定义，32位为0，16位或8位开启
 #define configIDLE_SHOULD_YIELD         0       //使能与空闲任务优先级相同的任务

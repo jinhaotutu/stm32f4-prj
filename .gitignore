@@ -71,3 +71,4 @@ makefile
 *.settings
 
 doc
+*.TMP

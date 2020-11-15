@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_flash.c
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file provides firmware functions to manage the following 
   *          functionalities of the FLASH peripheral:
   *            + FLASH Interface configuration
@@ -266,7 +266,7 @@
   *            @arg FLASH_Latency_14: FLASH Fourteen Latency cycles
   *            @arg FLASH_Latency_15: FLASH Fifteen Latency cycles 
   *              
-  * @note For STM32F405xx/407xx, STM32F415xx/417xx, STM32F401xx/411xE and STM32F412xG devices
+  * @note For STM32F405xx/407xx, STM32F415xx/417xx, STM32F401xx/411xE/STM32F412xG and STM32F413_423xx devices
   *       this parameter can be a value between FLASH_Latency_0 and FLASH_Latency_7.
   *
   * @note For STM32F42xxx/43xxx devices this parameter can be a value between 
@@ -455,6 +455,9 @@ void FLASH_Lock(void)
   *         For STM32F410xx devices this parameter can be a value between 
   *         FLASH_Sector_0 and FLASH_Sector_4.
   *
+  *         For STM32F413_423xx devices this parameter can be a value between 
+  *         FLASH_Sector_0 and FLASH_Sector_15.
+  *
   * @param  VoltageRange: The device voltage range which defines the erase parallelism.  
   *          This parameter can be one of the following values:
   *            @arg VoltageRange_1: when the device voltage range is 1.8V to 2.1V, 
@@ -578,7 +581,7 @@ FLASH_Status FLASH_EraseAllSectors(uint8_t VoltageRange)
     FLASH->CR &= ~(FLASH_CR_MER1 | FLASH_CR_MER2);
 #endif /* STM32F427_437xx ||  STM32F429_439xx ||  STM32F469_479xx */
 
-#if defined(STM32F40_41xxx) || defined(STM32F401xx) || defined(STM32F410xx) || defined(STM32F411xE) || defined(STM32F412xG) || defined(STM32F446xx)
+#if defined(STM32F40_41xxx) || defined(STM32F401xx) || defined(STM32F410xx) || defined(STM32F411xE) || defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx)
     FLASH->CR &= CR_PSIZE_MASK;
     FLASH->CR |= tmp_psize;
     FLASH->CR |= FLASH_CR_MER;
@@ -589,7 +592,7 @@ FLASH_Status FLASH_EraseAllSectors(uint8_t VoltageRange)
 
     /* if the erase operation is completed, disable the MER Bit */
     FLASH->CR &= (~FLASH_CR_MER);
-#endif /* STM32F40_41xxx || STM32F401xx || STM32F410xx || STM32F411xE || STM32F412xG || STM32F446xx */
+#endif /* STM32F40_41xxx || STM32F401xx || STM32F410xx || STM32F411xE || STM32F412xG || STM32F413_423xx || STM32F446xx */
 
   }   
   /* Return the Erase Status */
@@ -1117,7 +1120,7 @@ void FLASH_OB_PCROPSelectionConfig(uint8_t OB_PcROP)
   *         sectors, for the first 1 MB of the Flash.
   *           
   * @note   This function can be used only for STM32F42xxx/43xxx , STM32F401xx/411xE 
-  *         and STM32F412xG devices.
+  *         STM32F412xG and STM32F413_423xx devices.
   *   
   * @param  OB_PCROP: specifies the sector(s) to be read/write protected or unprotected.
   *          This parameter can be one of the following values:

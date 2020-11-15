@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_spi.c
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file provides firmware functions to manage the following 
   *          functionalities of the Serial peripheral interface (SPI):
   *           + Initialization and Configuration
@@ -475,8 +475,16 @@ void I2S_Init(SPI_TypeDef* SPIx, I2S_InitTypeDef* I2S_InitStruct)
                   (uint16_t)(I2S_InitStruct->I2S_Standard | (uint16_t)(I2S_InitStruct->I2S_DataFormat | \
                   (uint16_t)I2S_InitStruct->I2S_CPOL))));
  
+#if defined(SPI_I2SCFGR_ASTRTEN)
+  if((I2S_InitStruct->I2S_Standard  == I2S_Standard_PCMShort) || (I2S_InitStruct->I2S_Standard  == I2S_Standard_PCMLong))
+  {
+    /* Write to SPIx I2SCFGR */  
+    SPIx->I2SCFGR = tmpreg | SPI_I2SCFGR_ASTRTEN;
+  }
+#else
   /* Write to SPIx I2SCFGR */  
-  SPIx->I2SCFGR = tmpreg;
+  SPIx->I2SCFGR = tmpreg ;
+#endif 
 }
 
 /**

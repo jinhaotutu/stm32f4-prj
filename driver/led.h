@@ -45,6 +45,8 @@ void led_driver_init(void);
 void led_driver_write(uint8_t *data, uint32_t len);
 uint32_t led_driver_read(uint8_t *data, uint32_t max_len);
 
+void network_led_write(uint8_t *data, uint32_t len);
+
 #ifdef __cplusplus
 }
 #endif

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_qspi.h
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file contains all the functions prototypes for the QSPI 
   *          firmware library.
   ******************************************************************************
@@ -44,7 +44,7 @@
 /** @addtogroup QSPI
   * @{
   */
-#if defined(STM32F412xG) || defined(STM32F446xx) || defined(STM32F469_479xx)
+#if defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx) || defined(STM32F469_479xx)
 /* Exported types ------------------------------------------------------------*/
 
 /** 
@@ -475,7 +475,7 @@ ITStatus   QSPI_GetITStatus(uint32_t QSPI_IT);
 void       QSPI_ClearITPendingBit(uint32_t QSPI_IT);
 uint32_t   QSPI_GetFMode(void);
 
-#endif /* STM32F412xG || STM32F446xx || STM32F469_479xx */
+#endif /* STM32F412xG || STM32F413_423xx || STM32F446xx || STM32F469_479xx */
 /**
   * @}
   */

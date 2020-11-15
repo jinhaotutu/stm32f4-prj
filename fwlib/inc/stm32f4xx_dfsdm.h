@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_dfsdm.h
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file contains all the functions prototypes for the DFSDM
   *          firmware library
   ******************************************************************************
@@ -34,7 +34,7 @@
  extern "C" {
 #endif
 
-#if defined(STM32F412xG)
+#if defined(STM32F412xG) || defined(STM32F413_423xx)
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
 
@@ -318,7 +318,7 @@ typedef struct
 #define DFSDM_DMAConversionMode_Regular     ((uint32_t)0x00000010)  /*!<  DFSDM Regular mode */
 #define DFSDM_DMAConversionMode_Injected    ((uint32_t)0x00000000)  /*!<  DFSDM Injected mode */
 
-#define IS_DFSDM_CONVERSION_MODE(MODE)    ((MODE) == DFSDM_DMAConversionMode_Regular || \
+#define IS_DFSDM_CONVERSION_MODE(MODE)    (((MODE) == DFSDM_DMAConversionMode_Regular) || \
                                            ((MODE) == DFSDM_DMAConversionMode_Injected))
 /**
   * @}
@@ -417,8 +417,11 @@ typedef struct
                                           ((TRIG) == DFSDM_Trigger_TIM8_TRGO2) || \
                                           ((TRIG) == DFSDM_Trigger_TIM4_TRGO)  || \
                                           ((TRIG) == DFSDM_Trigger_TIM6_TRGO)  || \
-                                          ((TRIG) == DFSDM_Trigger_TIM1_TRGO)  || \
-                                          ((TRIG) == DFSDM_Trigger_EXTI15))
+                                          ((TRIG) == DFSDM_Trigger_TIM7_TRGO)  || \
+                                          ((TRIG) == DFSDM_Trigger_EXTI15)     || \
+                                          ((TRIG) == DFSDM_Trigger_TIM3_TRGO)  || \
+                                          ((TRIG) == DFSDM_Trigger_TIM16_OC1)  || \
+                                          ((TRIG) == DFSDM_Trigger_EXTI11))  
 
 #define IS_DFSDM1_INJ_TRIGGER(TRIG)      IS_DFSDM0_INJ_TRIGGER(TRIG)
 /**
@@ -653,32 +656,65 @@ typedef struct
   * @}
   */
 
-#define IS_DFSDM_DATA_RIGHT_BIT_SHIFT(SHIFT)  (SHIFT < 0x20 )
+#define IS_DFSDM_DATA_RIGHT_BIT_SHIFT(SHIFT)  ((SHIFT) < 0x20 )
 
-#define IS_DFSDM_OFFSET(OFFSET)               (OFFSET < 0x01000000 )
+#define IS_DFSDM_OFFSET(OFFSET)               ((OFFSET) < 0x01000000 )
 
+#if defined(STM32F413_423xx)
+#define IS_DFSDM_ALL_CHANNEL(CHANNEL)   (((CHANNEL) == DFSDM1_Channel0) || \
+                                         ((CHANNEL) == DFSDM1_Channel1) || \
+                                         ((CHANNEL) == DFSDM1_Channel2) || \
+                                         ((CHANNEL) == DFSDM1_Channel3) || \
+                                         ((CHANNEL) == DFSDM2_Channel0) || \
+                                         ((CHANNEL) == DFSDM2_Channel1) || \
+                                         ((CHANNEL) == DFSDM2_Channel2) || \
+                                         ((CHANNEL) == DFSDM2_Channel3) || \
+                                         ((CHANNEL) == DFSDM2_Channel4) || \
+                                         ((CHANNEL) == DFSDM2_Channel5) || \
+                                         ((CHANNEL) == DFSDM2_Channel6) || \
+                                         ((CHANNEL) == DFSDM2_Channel7))
+
+#define IS_DFSDM_ALL_FILTER(FILTER)     (((FILTER) == DFSDM1_0) || \
+                                         ((FILTER) == DFSDM1_1) || \
+                                         ((FILTER) == DFSDM2_0) || \
+                                         ((FILTER) == DFSDM2_1) || \
+                                         ((FILTER) == DFSDM2_2) || \
+                                         ((FILTER) == DFSDM2_3))
+
+#define IS_DFSDM_SYNC_FILTER(FILTER)    (((FILTER) == DFSDM1_0) || \
+                                         ((FILTER) == DFSDM1_1) || \
+                                         ((FILTER) == DFSDM2_0) || \
+                                         ((FILTER) == DFSDM2_1) || \
+                                         ((FILTER) == DFSDM2_2) || \
+                                         ((FILTER) == DFSDM2_3))
+#else
 #define IS_DFSDM_ALL_CHANNEL(CHANNEL)   (((CHANNEL) == DFSDM1_Channel0) || \
                                          ((CHANNEL) == DFSDM1_Channel1) || \
                                          ((CHANNEL) == DFSDM1_Channel2) || \
                                          ((CHANNEL) == DFSDM1_Channel3))
-                                         
-#define IS_DFSDM_ALL_FILTER(FILTER)     (((FILTER) == DFSDM0) || \
-                                         ((FILTER) == DFSDM1))
 
-#define IS_DFSDM_SYNC_FILTER(FILTER)    (((FILTER) == DFSDM1))
+#define IS_DFSDM_ALL_FILTER(FILTER)     (((FILTER) == DFSDM1_0) || \
+                                         ((FILTER) == DFSDM1_1))
 
-#define IS_DFSDM_SINC_OVRSMPL_RATIO(RATIO)  ( RATIO < 0x401 ) & ( RATIO >= 0x001 )
+#define IS_DFSDM_SYNC_FILTER(FILTER)    (((FILTER) == DFSDM1_0) || \
+                                         ((FILTER) == DFSDM1_1))
+#endif /* STM32F413_423xx */
 
-#define IS_DFSDM_INTG_OVRSMPL_RATIO(RATIO)  ( RATIO < 0x101 ) & ( RATIO >= 0x001 )
 
-#define IS_DFSDM_CLOCK_OUT_DIVIDER(DIVIDER) ( DIVIDER < 0x101 )
 
-#define IS_DFSDM_CSD_THRESHOLD_VALUE(VALUE) ( VALUE < 256 )
 
-#define IS_DFSDM_AWD_OVRSMPL_RATIO(RATIO)   ( RATIO < 33 ) & ( RATIO >= 0x001 )
+#define IS_DFSDM_SINC_OVRSMPL_RATIO(RATIO)  (((RATIO) < 0x401) && ((RATIO) >= 0x001))
 
-#define IS_DFSDM_HIGH_THRESHOLD(VALUE)      (VALUE < 0x1000000 )
-#define IS_DFSDM_LOW_THRESHOLD(VALUE)       (VALUE < 0x1000000 )
+#define IS_DFSDM_INTG_OVRSMPL_RATIO(RATIO)  (((RATIO) < 0x101 ) && ((RATIO) >= 0x001))
+
+#define IS_DFSDM_CLOCK_OUT_DIVIDER(DIVIDER) ((DIVIDER) < 0x101 )
+
+#define IS_DFSDM_CSD_THRESHOLD_VALUE(VALUE) ((VALUE) < 256)
+
+#define IS_DFSDM_AWD_OVRSMPL_RATIO(RATIO)   ((RATIO) < 33) && ((RATIO) >= 0x001)
+
+#define IS_DFSDM_HIGH_THRESHOLD(VALUE)      ((VALUE) < 0x1000000)
+#define IS_DFSDM_LOW_THRESHOLD(VALUE)       ((VALUE) < 0x1000000)
 /**
   * @}
   */
@@ -690,62 +726,91 @@ typedef struct
 void DFSDM_DeInit(void);
 void DFSDM_TransceiverInit(DFSDM_Channel_TypeDef* DFSDM_Channelx, DFSDM_TransceiverInitTypeDef* DFSDM_TransceiverInitStruct);
 void DFSDM_TransceiverStructInit(DFSDM_TransceiverInitTypeDef* DFSDM_TransceiverInitStruct);
-void DFSDM_FilterInit(DFSDM_TypeDef* DFSDMx, DFSDM_FilterInitTypeDef* DFSDM_FilterInitStruct);
+void DFSDM_FilterInit(DFSDM_Filter_TypeDef* DFSDMx, DFSDM_FilterInitTypeDef* DFSDM_FilterInitStruct);
 void DFSDM_FilterStructInit(DFSDM_FilterInitTypeDef* DFSDM_FilterInitStruct);
 
 /* Configuration functions ****************************************************/
-void DFSDM_Cmd(FunctionalState NewState);
+#if defined(STM32F412xG)
+void DFSDM_Command(FunctionalState NewState);
+#else /* STM32F413_423xx */
+void DFSDM_Cmd(uint32_t Instance, FunctionalState NewState);
+#endif /* STM32F412xG */
 void DFSDM_ChannelCmd(DFSDM_Channel_TypeDef* DFSDM_Channelx, FunctionalState NewState);
-void DFSDM_FilterCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState);
+void DFSDM_FilterCmd(DFSDM_Filter_TypeDef* DFSDMx, FunctionalState NewState);
+#if defined(STM32F412xG)
 void DFSDM_ConfigClkOutputDivider(uint32_t DFSDM_ClkOutDivision);
 void DFSDM_ConfigClkOutputSource(uint32_t DFSDM_ClkOutSource);
-void DFSDM_SelectInjectedConversionMode(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_InjectConvMode);
-void DFSDM_SelectInjectedChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_InjectedChannelx);
-void DFSDM_SelectRegularChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_RegularChannelx);
-void DFSDM_StartSoftwareInjectedConversion(DFSDM_TypeDef* DFSDMx);
-void DFSDM_StartSoftwareRegularConversion(DFSDM_TypeDef* DFSDMx);
-void DFSDM_SynchronousFilter0InjectedStart(DFSDM_TypeDef* DFSDMx);
-void DFSDM_SynchronousFilter0RegularStart(DFSDM_TypeDef* DFSDMx);
-void DFSDM_RegularContinuousModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState);
-void DFSDM_InjectedContinuousModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState);
-void DFSDM_FastModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState);
-void DFSDM_ConfigInjectedTrigger(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_Trigger, uint32_t DFSDM_TriggerEdge);
+#else
+void DFSDM_ConfigClkOutputDivider(uint32_t Instance, uint32_t DFSDM_ClkOutDivision);
+void DFSDM_ConfigClkOutputSource(uint32_t Instance, uint32_t DFSDM_ClkOutSource);
+#endif /* STM32F412xG */
+void DFSDM_SelectInjectedConversionMode(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_InjectConvMode);
+void DFSDM_SelectInjectedChannel(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_InjectedChannelx);
+void DFSDM_SelectRegularChannel(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_RegularChannelx);
+void DFSDM_StartSoftwareInjectedConversion(DFSDM_Filter_TypeDef* DFSDMx);
+void DFSDM_StartSoftwareRegularConversion(DFSDM_Filter_TypeDef* DFSDMx);
+void DFSDM_SynchronousFilter0InjectedStart(DFSDM_Filter_TypeDef* DFSDMx);
+void DFSDM_SynchronousFilter0RegularStart(DFSDM_Filter_TypeDef* DFSDMx);
+void DFSDM_RegularContinuousModeCmd(DFSDM_Filter_TypeDef* DFSDMx, FunctionalState NewState);
+void DFSDM_InjectedContinuousModeCmd(DFSDM_Filter_TypeDef* DFSDMx, FunctionalState NewState);
+void DFSDM_FastModeCmd(DFSDM_Filter_TypeDef* DFSDMx, FunctionalState NewState);
+void DFSDM_ConfigInjectedTrigger(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_Trigger, uint32_t DFSDM_TriggerEdge);
 void DFSDM_ConfigBRKShortCircuitDetector(DFSDM_Channel_TypeDef* DFSDM_Channelx, uint32_t DFSDM_SCDBreak_i, FunctionalState NewState);
 void DFSDM_ConfigBRKAnalogWatchDog(DFSDM_Channel_TypeDef* DFSDM_Channelx, uint32_t DFSDM_SCDBreak_i, FunctionalState NewState);
 void DFSDM_ConfigShortCircuitThreshold(DFSDM_Channel_TypeDef* DFSDM_Channelx, uint32_t DFSDM_SCDThreshold);
-void DFSDM_ConfigAnalogWatchdog(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint32_t DFSDM_AWDFastMode);
-void DFSDM_ConfigAWDFilter(DFSDM_Channel_TypeDef* DFSDM_Channelx, uint32_t AWD_SincOrder, uint32_t AWD_SincOverSampleRatio);
+void DFSDM_ConfigAnalogWatchdog(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint32_t DFSDM_AWDFastMode);
+void DFSDM_ConfigAWDFilter(DFSDM_Channel_TypeDef* DFSDM_Channelx, uint32_t DFSDM_AWDSincOrder, uint32_t DFSDM_AWDSincOverSampleRatio);
 uint32_t DFSDM_GetAWDConversionValue(DFSDM_Channel_TypeDef* DFSDM_Channelx);
-void DFSDM_SetAWDThreshold(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_HighThreshold, uint32_t DFSDM_LowThreshold);
-void DFSDM_SelectExtremesDetectorChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_ExtremChannelx);
-int32_t DFSDM_GetRegularConversionData(DFSDM_TypeDef* DFSDMx);
-int32_t DFSDM_GetInjectedConversionData(DFSDM_TypeDef* DFSDMx);
-int32_t DFSDM_GetMaxValue(DFSDM_TypeDef* DFSDMx);
-int32_t DFSDM_GetMinValue(DFSDM_TypeDef* DFSDMx);
-int32_t DFSDM_GetMaxValueChannel(DFSDM_TypeDef* DFSDMx);
-int32_t DFSDM_GetMinValueChannel(DFSDM_TypeDef* DFSDMx);
-uint32_t DFSDM_GetConversionTime(DFSDM_TypeDef* DFSDMx);
-void DFSDM_DMATransferConfig(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_DMAConversionMode, FunctionalState NewState);
+void DFSDM_SetAWDThreshold(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_HighThreshold, uint32_t DFSDM_LowThreshold);
+void DFSDM_SelectExtremesDetectorChannel(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_ExtremChannelx);
+int32_t DFSDM_GetRegularConversionData(DFSDM_Filter_TypeDef* DFSDMx);
+int32_t DFSDM_GetInjectedConversionData(DFSDM_Filter_TypeDef* DFSDMx);
+int32_t DFSDM_GetMaxValue(DFSDM_Filter_TypeDef* DFSDMx);
+int32_t DFSDM_GetMinValue(DFSDM_Filter_TypeDef* DFSDMx);
+int32_t DFSDM_GetMaxValueChannel(DFSDM_Filter_TypeDef* DFSDMx);
+int32_t DFSDM_GetMinValueChannel(DFSDM_Filter_TypeDef* DFSDMx);
+uint32_t DFSDM_GetConversionTime(DFSDM_Filter_TypeDef* DFSDMx);
+void DFSDM_DMATransferConfig(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_DMAConversionMode, FunctionalState NewState);
 /* Interrupts and flags management functions **********************************/
-void DFSDM_ITConfig(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_IT, FunctionalState NewState);
+void DFSDM_ITConfig(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_IT, FunctionalState NewState);
+#if defined(STM32F412xG)
 void DFSDM_ITClockAbsenceCmd(FunctionalState NewState);
 void DFSDM_ITShortCircuitDetectorCmd(FunctionalState NewState);
+#else /* STM32F413_423xx */
+void DFSDM_ITClockAbsenceCmd(uint32_t Instance, FunctionalState NewState);
+void DFSDM_ITShortCircuitDetectorCmd(uint32_t Instance, FunctionalState NewState);
+#endif /* STM32F412xG */
 
-FlagStatus DFSDM_GetFlagStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_FLAG);
+FlagStatus DFSDM_GetFlagStatus(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_FLAG);
+#if defined(STM32F412xG)
 FlagStatus DFSDM_GetClockAbsenceFlagStatus(uint32_t DFSDM_FLAG_CLKAbsence);
 FlagStatus DFSDM_GetShortCircuitFlagStatus(uint32_t DFSDM_FLAG_SCD);
-FlagStatus DFSDM_GetWatchdogFlagStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint8_t DFSDM_Threshold);
+#else /* STM32F413_423xx */
+FlagStatus DFSDM_GetClockAbsenceFlagStatus(uint32_t Instance, uint32_t DFSDM_FLAG_CLKAbsence);
+FlagStatus DFSDM_GetShortCircuitFlagStatus(uint32_t Instance, uint32_t DFSDM_FLAG_SCD);
+#endif /* STM32F412xG */
+FlagStatus DFSDM_GetWatchdogFlagStatus(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint8_t DFSDM_Threshold);
 
-void DFSDM_ClearFlag(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_CLEARF);
+void DFSDM_ClearFlag(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_CLEARF);
+#if defined(STM32F412xG)
 void DFSDM_ClearClockAbsenceFlag(uint32_t DFSDM_CLEARF_CLKAbsence);
 void DFSDM_ClearShortCircuitFlag(uint32_t DFSDM_CLEARF_SCD);
-void DFSDM_ClearAnalogWatchdogFlag(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint8_t DFSDM_Threshold);
-
-ITStatus DFSDM_GetITStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_IT);
-ITStatus DFSDM_GetClockAbsenceITStatus(uint32_t DFSDM_IT_CLKAbsence);
-ITStatus DFSDM_GetGetShortCircuitITStatus(uint32_t DFSDM_IT_SCR);
-
+#else /* STM32F413_423xx */
+void DFSDM_ClearClockAbsenceFlag(uint32_t Instance, uint32_t DFSDM_CLEARF_CLKAbsence);
+void DFSDM_ClearShortCircuitFlag(uint32_t Instance, uint32_t DFSDM_CLEARF_SCD);
 #endif /* STM32F412xG */
+void DFSDM_ClearAnalogWatchdogFlag(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint8_t DFSDM_Threshold);
+
+ITStatus DFSDM_GetITStatus(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_IT);
+#if defined(STM32F412xG)
+ITStatus DFSDM_GetClockAbsenceITStatus(uint32_t DFSDM_IT_CLKAbsence);
+ITStatus DFSDM_GetShortCircuitITStatus(uint32_t DFSDM_IT_SCR);
+#else /* STM32F413_423xx */
+ITStatus DFSDM_GetClockAbsenceITStatus(uint32_t Instance, uint32_t DFSDM_IT_CLKAbsence);
+ITStatus DFSDM_GetShortCircuitITStatus(uint32_t Instance, uint32_t DFSDM_IT_SCR);
+#endif /* STM32F412xG */
+
+#endif /* STM32F412xG || STM32F413_423xx */
 
 #ifdef __cplusplus
 }

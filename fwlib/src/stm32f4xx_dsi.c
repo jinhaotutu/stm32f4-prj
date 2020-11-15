@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_dsi.c
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file provides firmware functions to manage the following 
   *          functionalities of the Display Serial Interface (DSI):
   *           + Initialization and Configuration
@@ -772,17 +772,17 @@ void DSI_LongWrite(DSI_TypeDef *DSIx,
     if(uicounter == 0x00)
     {
       DSIx->GPDR=(Param1 | \
-                            ((*(ParametersTable+uicounter))<<8) | \
-                            ((*(ParametersTable+uicounter+1))<<16) | \
-                            ((*(ParametersTable+uicounter+2))<<24));
+                            ((uint32_t)(*(ParametersTable+uicounter))<<8) | \
+                            ((uint32_t)(*(ParametersTable+uicounter+1))<<16) | \
+                            ((uint32_t)(*(ParametersTable+uicounter+2))<<24));
       uicounter += 3;
     }
     else
     {
       DSIx->GPDR=((*(ParametersTable+uicounter)) | \
-                            ((*(ParametersTable+uicounter+1))<<8) | \
-                            ((*(ParametersTable+uicounter+2))<<16) | \
-                            ((*(ParametersTable+uicounter+3))<<24));
+                            ((uint32_t)(*(ParametersTable+uicounter+1))<<8) | \
+                            ((uint32_t)(*(ParametersTable+uicounter+2))<<16) | \
+                            ((uint32_t)(*(ParametersTable+uicounter+3))<<24));
       uicounter+=4;
     }
   }
@@ -838,7 +838,7 @@ void DSI_Read(DSI_TypeDef *DSIx,
   {
     DSI_ConfigPacketHeader(DSIx, ChannelNbr, Mode, ParametersTable[0], 0);
   }
-  else if (Mode == DSI_GEN_SHORT_PKT_READ_P2)
+  else /* DSI_GEN_SHORT_PKT_READ_P2 */
   {
     DSI_ConfigPacketHeader(DSIx, ChannelNbr, Mode, ParametersTable[0], ParametersTable[1]);
   }
@@ -925,7 +925,7 @@ void DSI_EnterULPMData(DSI_TypeDef *DSIx)
     while((DSIx->PSR & DSI_PSR_UAN0) != 0)
     {}
   }
-  else if ((DSIx->PCONFR & DSI_PCONFR_NL) == DSI_TWO_DATA_LANES)
+  else /* DSI_TWO_DATA_LANES */
   {
     while((DSIx->PSR & (DSI_PSR_UAN0 | DSI_PSR_UAN1)) != 0)
     {}
@@ -949,7 +949,7 @@ void DSI_ExitULPMData(DSI_TypeDef *DSIx)
     while((DSIx->PSR & DSI_PSR_UAN0) != DSI_PSR_UAN0)
     {}
   }
-  else if ((DSIx->PCONFR & DSI_PCONFR_NL) == DSI_TWO_DATA_LANES)
+  else /* DSI_TWO_DATA_LANES */
   {
     while((DSIx->PSR & (DSI_PSR_UAN0 | DSI_PSR_UAN1)) != (DSI_PSR_UAN0 | DSI_PSR_UAN1))
     {}
@@ -982,7 +982,7 @@ void DSI_EnterULPM(DSI_TypeDef *DSIx)
     while((DSIx->PSR & (DSI_PSR_UAN0 | DSI_PSR_UANC)) != 0)
     {}
   }
-  else if ((DSIx->PCONFR & DSI_PCONFR_NL) == DSI_TWO_DATA_LANES)
+  else /* DSI_TWO_DATA_LANES */
   {
     while((DSIx->PSR & (DSI_PSR_UAN0 | DSI_PSR_UAN1 | DSI_PSR_UANC)) != 0)
     {}
@@ -1016,7 +1016,7 @@ void DSI_ExitULPM(DSI_TypeDef *DSIx)
     while((DSIx->PSR & (DSI_PSR_UAN0 | DSI_PSR_UANC)) != (DSI_PSR_UAN0 | DSI_PSR_UANC))
     {}
   }
-  else if ((DSIx->PCONFR & DSI_PCONFR_NL) == DSI_TWO_DATA_LANES)
+  else /* DSI_TWO_DATA_LANES */
   {
     while((DSIx->PSR & (DSI_PSR_UAN0 | DSI_PSR_UAN1 | DSI_PSR_UANC)) != (DSI_PSR_UAN0 | DSI_PSR_UAN1 | DSI_PSR_UANC))
     {}
@@ -1093,7 +1093,7 @@ void DSI_SetSlewRateAndDelayTuning(DSI_TypeDef *DSIx, uint32_t CommDelay, uint32
       DSIx->WPCR[1] &= ~DSI_WPCR1_HSTXSRCCL;
       DSIx->WPCR[1] |= Value<<16;
     }
-    else if(Lane == DSI_DATA_LANES)
+    else /* DSI_DATA_LANES */
     {
       /* High-Speed Transmission Slew Rate Control on Data Lanes */
       DSIx->WPCR[1] &= ~DSI_WPCR1_HSTXSRCDL;
@@ -1107,7 +1107,7 @@ void DSI_SetSlewRateAndDelayTuning(DSI_TypeDef *DSIx, uint32_t CommDelay, uint32
       DSIx->WPCR[1] &= ~DSI_WPCR1_LPSRCCL;
       DSIx->WPCR[1] |= Value<<6;
     }
-    else if(Lane == DSI_DATA_LANES)
+    else /*  DSI_DATA_LANES */
     {
       /* Low-Power transmission Slew Rate Compensation on Data Lanes */
       DSIx->WPCR[1] &= ~DSI_WPCR1_LPSRCDL;
@@ -1121,7 +1121,7 @@ void DSI_SetSlewRateAndDelayTuning(DSI_TypeDef *DSIx, uint32_t CommDelay, uint32
       DSIx->WPCR[1] &= ~DSI_WPCR1_HSTXDCL;
       DSIx->WPCR[1] |= Value;
     }
-    else if(Lane == DSI_DATA_LANES)
+    else /* DSI_DATA_LANES */
     {
       /* High-Speed Transmission Delay on Data Lanes */
       DSIx->WPCR[1] &= ~DSI_WPCR1_HSTXDDL;
@@ -1161,7 +1161,7 @@ void DSI_SetSDD(DSI_TypeDef *DSIx, FunctionalState State)
   
   /* Activate/Disactivate additional current path on all lanes */
   DSIx->WPCR[1] &= ~DSI_WPCR1_SDDC;
-  DSIx->WPCR[1] |= State<<12;
+  DSIx->WPCR[1] |= ((uint32_t)State<<12);
 }
 
 /**
@@ -1188,19 +1188,19 @@ void DSI_SetLanePinsConfiguration(DSI_TypeDef *DSIx, uint32_t CustomLane, uint32
     {
       /* Swap pins on clock lane */
       DSIx->WPCR[0] &= ~DSI_WPCR0_SWCL;
-      DSIx->WPCR[0] |= (State<<6);
+      DSIx->WPCR[0] |= ((uint32_t)State<<6);
     }
     else if(Lane == DSI_DATA_LANE0)
     {
       /* Swap pins on data lane 0 */
       DSIx->WPCR[0] &= ~DSI_WPCR0_SWDL0;
-      DSIx->WPCR[0] |= (State<<7);
+      DSIx->WPCR[0] |= ((uint32_t)State<<7);
     }
-    else if(Lane == DSI_DATA_LANE1)
+    else /* DSI_DATA_LANE1 */
     {
       /* Swap pins on data lane 1 */
       DSIx->WPCR[0] &= ~DSI_WPCR0_SWDL1;
-      DSIx->WPCR[0] |= (State<<8);
+      DSIx->WPCR[0] |= ((uint32_t)State<<8);
     }
     break;
   case DSI_INVERT_HS_SIGNAL:
@@ -1208,19 +1208,19 @@ void DSI_SetLanePinsConfiguration(DSI_TypeDef *DSIx, uint32_t CustomLane, uint32
     {
       /* Invert HS signal on clock lane */
       DSIx->WPCR[0] &= ~DSI_WPCR0_HSICL;
-      DSIx->WPCR[0] |= (State<<9);
+      DSIx->WPCR[0] |= ((uint32_t)State<<9);
     }
     else if(Lane == DSI_DATA_LANE0)
     {
       /* Invert HS signal on data lane 0 */
       DSIx->WPCR[0] &= ~DSI_WPCR0_HSIDL0;
-      DSIx->WPCR[0] |= (State<<10);
+      DSIx->WPCR[0] |= ((uint32_t)State<<10);
     }
-    else if(Lane == DSI_DATA_LANE1)
+    else /* DSI_DATA_LANE1 */
     {
       /* Invert HS signal on data lane 1 */
       DSIx->WPCR[0] &= ~DSI_WPCR0_HSIDL1;
-      DSIx->WPCR[0] |= (State<<11);
+      DSIx->WPCR[0] |= ((uint32_t)State<<11);
     }
     break;
   default:
@@ -1248,7 +1248,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_TCLK_POST:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_TCLKPOSTEN;
-    DSIx->WPCR[0] |= (State<<27);
+    DSIx->WPCR[0] |= ((uint32_t)State<<27);
     
     if(State)
     {
@@ -1261,7 +1261,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_TLPX_CLK:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_TLPXCEN;
-    DSIx->WPCR[0] |= (State<<26);
+    DSIx->WPCR[0] |= ((uint32_t)State<<26);
     
     if(State)
     {
@@ -1274,7 +1274,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_THS_EXIT:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_THSEXITEN;
-    DSIx->WPCR[0] |= (State<<25);
+    DSIx->WPCR[0] |= ((uint32_t)State<<25);
     
     if(State)
     {
@@ -1287,7 +1287,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_TLPX_DATA:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_TLPXDEN;
-    DSIx->WPCR[0] |= (State<<24);
+    DSIx->WPCR[0] |= ((uint32_t)State<<24);
     
     if(State)
     {
@@ -1300,7 +1300,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_THS_ZERO:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_THSZEROEN;
-    DSIx->WPCR[0] |= (State<<23);
+    DSIx->WPCR[0] |= ((uint32_t)State<<23);
     
     if(State)
     {
@@ -1313,7 +1313,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_THS_TRAIL:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_THSTRAILEN;
-    DSIx->WPCR[0] |= (State<<22);
+    DSIx->WPCR[0] |= ((uint32_t)State<<22);
     
     if(State)
     {
@@ -1326,7 +1326,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_THS_PREPARE:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_THSPREPEN;
-    DSIx->WPCR[0] |= (State<<21);
+    DSIx->WPCR[0] |= ((uint32_t)State<<21);
     
     if(State)
     {
@@ -1339,7 +1339,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_TCLK_ZERO:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_TCLKZEROEN;
-    DSIx->WPCR[0] |= (State<<20);
+    DSIx->WPCR[0] |= ((uint32_t)State<<20);
     
     if(State)
     {
@@ -1352,7 +1352,7 @@ void DSI_SetPHYTimings(DSI_TypeDef *DSIx, uint32_t Timing, FunctionalState State
   case DSI_TCLK_PREPARE:
     /* Enable/Disable custom timing setting */
     DSIx->WPCR[0] &= ~DSI_WPCR0_TCLKPREPEN;
-    DSIx->WPCR[0] |= (State<<19);
+    DSIx->WPCR[0] |= ((uint32_t)State<<19);
     
     if(State)
     {
@@ -1385,13 +1385,13 @@ void DSI_ForceTXStopMode(DSI_TypeDef *DSIx, uint32_t Lane, FunctionalState State
   {
     /* Force/Unforce the Clock Lane in TX Stop Mode */
     DSIx->WPCR[0] &= ~DSI_WPCR0_FTXSMCL;
-    DSIx->WPCR[0] |= (State<<12);
+    DSIx->WPCR[0] |= ((uint32_t)State<<12);
   }
-  else if(Lane == DSI_DATA_LANES)
+  else /* DSI_DATA_LANES */
   {
     /* Force/Unforce the Data Lanes in TX Stop Mode */
     DSIx->WPCR[0] &= ~DSI_WPCR0_FTXSMDL;
-    DSIx->WPCR[0] |= (State<<13);
+    DSIx->WPCR[0] |= ((uint32_t)State<<13);
   }
 }
 
@@ -1409,7 +1409,7 @@ void DSI_ForceRXLowPower(DSI_TypeDef *DSIx, FunctionalState State)
   
   /* Force/Unforce LP Receiver in Low-Power Mode */
   DSIx->WPCR[1] &= ~DSI_WPCR1_FLPRXLPM;
-  DSIx->WPCR[1] |= State<<22;
+  DSIx->WPCR[1] |= ((uint32_t)State<<22);
 }
 
 /**
@@ -1426,7 +1426,7 @@ void DSI_ForceDataLanesInRX(DSI_TypeDef *DSIx, FunctionalState State)
   
   /* Force Data Lanes in RX Mode */
   DSIx->WPCR[0] &= ~DSI_WPCR0_TDDL;
-  DSIx->WPCR[0] |= State<<16;
+  DSIx->WPCR[0] |= ((uint32_t)State<<16);
 }
 
 /**
@@ -1443,7 +1443,7 @@ void DSI_SetPullDown(DSI_TypeDef *DSIx, FunctionalState State)
   
   /* Enable/Disable pull-down on lanes */
   DSIx->WPCR[0] &= ~DSI_WPCR0_PDEN;
-  DSIx->WPCR[0] |= State<<18;
+  DSIx->WPCR[0] |= ((uint32_t)State<<18);
 }
 
 /**
@@ -1460,7 +1460,7 @@ void DSI_SetContentionDetectionOff(DSI_TypeDef *DSIx, FunctionalState State)
   
   /* Contention Detection on Data Lanes OFF */
   DSIx->WPCR[0] &= ~DSI_WPCR0_CDOFFDL;
-  DSIx->WPCR[0] |= State<<14;
+  DSIx->WPCR[0] |= ((uint32_t)State<<14);
 }
 
 /**
@@ -1690,61 +1690,61 @@ void DSI_ConfigErrorMonitor(DSI_TypeDef *DSIx, uint32_t ActiveErrors)
   DSIx->IER[0] = 0;
   DSIx->IER[1] = 0;
     
-  if(ActiveErrors & DSI_ERROR_ACK)
+  if((ActiveErrors & DSI_ERROR_ACK) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[0] |= DSI_ERROR_ACK_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_PHY)
+  if((ActiveErrors & DSI_ERROR_PHY) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[0] |= DSI_ERROR_PHY_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_TX)
+  if((ActiveErrors & DSI_ERROR_TX) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[1] |= DSI_ERROR_TX_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_RX)
+  if((ActiveErrors & DSI_ERROR_RX) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[1] |= DSI_ERROR_RX_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_ECC)
+  if((ActiveErrors & DSI_ERROR_ECC) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[1] |= DSI_ERROR_ECC_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_CRC)
+  if((ActiveErrors & DSI_ERROR_CRC) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[1] |= DSI_ERROR_CRC_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_PSE)
+  if((ActiveErrors & DSI_ERROR_PSE) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[1] |= DSI_ERROR_PSE_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_EOT)
+  if((ActiveErrors & DSI_ERROR_EOT) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[1] |= DSI_ERROR_EOT_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_OVF)
+  if((ActiveErrors & DSI_ERROR_OVF) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[1] |= DSI_ERROR_OVF_MASK;
   }
   
-  if(ActiveErrors & DSI_ERROR_GEN)
+  if((ActiveErrors & DSI_ERROR_GEN) != RESET)
   {
     /* Enable the interrupt generation on selected errors */
     DSIx->IER[1] |= DSI_ERROR_GEN_MASK;

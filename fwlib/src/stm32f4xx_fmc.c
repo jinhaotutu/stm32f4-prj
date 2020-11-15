@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_fmc.c
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file provides firmware functions to manage the following 
   *          functionalities of the FMC peripheral:           
   *           + Interface with SRAM, PSRAM, NOR and OneNAND memories
@@ -295,8 +295,8 @@ void FMC_NORSRAMStructInit(FMC_NORSRAMInitTypeDef* FMC_NORSRAMInitStruct)
   FMC_NORSRAMInitStruct->FMC_WriteBurst = FMC_WriteBurst_Disable;
   FMC_NORSRAMInitStruct->FMC_ContinousClock = FMC_CClock_SyncOnly;
   
-  FMC_NORSRAMInitStruct->FMC_ReadWriteTimingStruct = (FMC_NORSRAMTimingInitTypeDef*)&FMC_DefaultTimingStruct;
-  FMC_NORSRAMInitStruct->FMC_WriteTimingStruct = (FMC_NORSRAMTimingInitTypeDef*)&FMC_DefaultTimingStruct;
+  FMC_NORSRAMInitStruct->FMC_ReadWriteTimingStruct = (FMC_NORSRAMTimingInitTypeDef*)((uint32_t)&FMC_DefaultTimingStruct);
+  FMC_NORSRAMInitStruct->FMC_WriteTimingStruct = (FMC_NORSRAMTimingInitTypeDef*)((uint32_t)&FMC_DefaultTimingStruct);
 }
 
 /**

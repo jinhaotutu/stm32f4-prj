@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_gpio.h
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file contains all the functions prototypes for the GPIO firmware
   *          library.  
   ******************************************************************************
@@ -257,9 +257,9 @@ typedef struct
   */ 
 #define GPIO_AF_TIM1          ((uint8_t)0x01)  /* TIM1 Alternate Function mapping */
 #define GPIO_AF_TIM2          ((uint8_t)0x01)  /* TIM2 Alternate Function mapping */
-#if defined(STM32F410xx)
+#if defined(STM32F410xx) || defined(STM32F413_423xx)
 #define GPIO_AF_LPTIM         ((uint8_t)0x01)  /* LPTIM Alternate Function mapping */
-#endif /* STM32F410xx */
+#endif /* STM32F410xx || STM32F413_423xx */
 /** 
   * @brief   AF 2 selection  
   */ 
@@ -277,6 +277,9 @@ typedef struct
 #if defined(STM32F446xx)
 #define GPIO_AF3_CEC          ((uint8_t)0x03)  /* CEC Alternate Function mapping */
 #endif /* STM32F446xx */
+#if defined(STM32F413_423xx)
+#define GPIO_AF3_DFSDM2       ((uint8_t)0x03)  /* DFSDM2 Alternate Function mapping */
+#endif /* STM32F413_423xx */
 /** 
   * @brief   AF 4 selection  
   */ 
@@ -286,7 +289,7 @@ typedef struct
 #if defined(STM32F446xx)
 #define GPIO_AF4_CEC          ((uint8_t)0x04)  /* CEC Alternate Function mapping */
 #endif /* STM32F446xx */
-#if defined(STM32F410xx) || defined(STM32F412xG) || defined(STM32F446xx)
+#if defined(STM32F410xx) || defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx)
 #define GPIO_AF_FMPI2C        ((uint8_t)0x04)  /* FMPI2C Alternate Function mapping */
 #endif /* STM32F410xx || STM32F446xx */
 
@@ -295,7 +298,7 @@ typedef struct
   */ 
 #define GPIO_AF_SPI1          ((uint8_t)0x05)  /* SPI1/I2S1 Alternate Function mapping */
 #define GPIO_AF_SPI2          ((uint8_t)0x05)  /* SPI2/I2S2 Alternate Function mapping */
-#define GPIO_AF5_SPI3         ((uint8_t)0x05)  /* SPI3/I2S3 Alternate Function mapping (Only for STM32F411xE Devices) */
+#define GPIO_AF5_SPI3         ((uint8_t)0x05)  /* SPI3/I2S3 Alternate Function mapping (Only for STM32F411xE and STM32F413_423xx Devices) */
 #define GPIO_AF_SPI4          ((uint8_t)0x05)  /* SPI4/I2S4 Alternate Function mapping */
 #define GPIO_AF_SPI5          ((uint8_t)0x05)  /* SPI5 Alternate Function mapping      */
 #define GPIO_AF_SPI6          ((uint8_t)0x05)  /* SPI6 Alternate Function mapping      */
@@ -309,10 +312,13 @@ typedef struct
 #define GPIO_AF6_SPI4         ((uint8_t)0x06)  /* SPI4 Alternate Function mapping (Only for STM32F411xE Devices) */
 #define GPIO_AF6_SPI5         ((uint8_t)0x06)  /* SPI5 Alternate Function mapping (Only for STM32F410xx/STM32F411xE Devices) */
 #define GPIO_AF_SAI1          ((uint8_t)0x06)  /* SAI1 Alternate Function mapping      */
-#define GPIO_AF_I2S2ext       ((uint8_t)0x06)  /* I2S2ext_SD Alternate Function mapping (only for STM32F412xG Devices) */
-#if defined(STM32F412xG)
-#define GPIO_AF6_DFSDM1       ((uint8_t)0x06)  /* DFSDM Alternate Function mapping */
-#endif /* STM32F412xG */
+#define GPIO_AF_I2S2ext       ((uint8_t)0x06)  /* I2S2ext_SD Alternate Function mapping (only for STM32F412xG and STM32F413_423xx Devices) */
+#if defined(STM32F412xG) || defined(STM32F413_423xx)
+#define GPIO_AF6_DFSDM1       ((uint8_t)0x06)  /* DFSDM1 Alternate Function mapping */
+#endif /* STM32F412xG || STM32F413_423xx */
+#if defined(STM32F413_423xx)
+#define GPIO_AF6_DFSDM2       ((uint8_t)0x06)  /* DFSDM2 Alternate Function mapping */
+#endif /* STM32F413_423xx */
 
 /** 
   * @brief   AF 7 selection  
@@ -321,6 +327,10 @@ typedef struct
 #define GPIO_AF_USART2         ((uint8_t)0x07)  /* USART2 Alternate Function mapping  */
 #define GPIO_AF_USART3         ((uint8_t)0x07)  /* USART3 Alternate Function mapping  */
 #define GPIO_AF7_SPI3          ((uint8_t)0x07)  /* SPI3/I2S3ext Alternate Function mapping */
+#if defined(STM32F413_423xx)
+#define GPIO_AF7_DFSDM2        ((uint8_t)0x07)  /* DFSDM2 Alternate Function mapping     */
+#define GPIO_AF7_SAI1          ((uint8_t)0x07)  /* SAI1 Alternate Function mapping       */
+#endif /* STM32F413_423xx */
 
 /** 
   * @brief   AF 7 selection Legacy 
@@ -335,11 +345,11 @@ typedef struct
 #define GPIO_AF_USART6        ((uint8_t)0x08)  /* USART6 Alternate Function mapping */
 #define GPIO_AF_UART7         ((uint8_t)0x08)  /* UART7 Alternate Function mapping  */
 #define GPIO_AF_UART8         ((uint8_t)0x08)  /* UART8 Alternate Function mapping  */
-#if defined(STM32F412xG)
+#if defined(STM32F412xG) || defined(STM32F413_423xx)
 #define GPIO_AF8_USART3        ((uint8_t)0x08)  /* USART3 Alternate Function mapping */
 #define GPIO_AF8_DFSDM1        ((uint8_t)0x08)  /* DFSDM Alternate Function mapping  */
 #define GPIO_AF8_CAN1          ((uint8_t)0x08)  /* CAN1 Alternate Function mapping   */
-#endif /* STM32F412xG */
+#endif /* STM32F412xG || STM32F413_423xx */
 #if defined(STM32F446xx)
 #define GPIO_AF8_SAI2          ((uint8_t)0x08)  /* SAI2 Alternate Function mapping */
 #define GPIO_AF_SPDIF         ((uint8_t)0x08)   /* SPDIF Alternate Function mapping */
@@ -353,18 +363,18 @@ typedef struct
 #define GPIO_AF_TIM12         ((uint8_t)0x09)  /* TIM12 Alternate Function mapping */
 #define GPIO_AF_TIM13         ((uint8_t)0x09)  /* TIM13 Alternate Function mapping */
 #define GPIO_AF_TIM14         ((uint8_t)0x09)  /* TIM14 Alternate Function mapping */
-#define GPIO_AF9_I2C2         ((uint8_t)0x09)  /* I2C2 Alternate Function mapping (Only for STM32F401xx/STM32F410xx/STM32F411xE/STM32F412xG Devices) */
-#define GPIO_AF9_I2C3         ((uint8_t)0x09)  /* I2C3 Alternate Function mapping (Only for STM32F401xx/STM32F411xE/STM32F412xG Devices) */
+#define GPIO_AF9_I2C2         ((uint8_t)0x09)  /* I2C2 Alternate Function mapping (Only for STM32F401xx/STM32F410xx/STM32F411xE/STM32F412xG/STM32F413_423xx Devices) */
+#define GPIO_AF9_I2C3         ((uint8_t)0x09)  /* I2C3 Alternate Function mapping (Only for STM32F401xx/STM32F411xE/STM32F412xG and STM32F413_423xx Devices) */
 #if defined(STM32F446xx)
 #define GPIO_AF9_SAI2         ((uint8_t)0x09)  /* SAI2 Alternate Function mapping */
 #endif /* STM32F446xx */
 #define GPIO_AF9_LTDC         ((uint8_t)0x09)  /* LTDC Alternate Function mapping */
-#if defined(STM32F412xG) || defined(STM32F446xx) || defined(STM32F469_479xx)
+#if defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx) || defined(STM32F469_479xx)
 #define GPIO_AF9_QUADSPI      ((uint8_t)0x09)  /* QuadSPI Alternate Function mapping */
-#endif /* STM32F412xG || STM32F446xx || STM32F469_479xx */
-#if defined(STM32F410xx) || defined(STM32F412xG)
+#endif /* STM32F412xG || STM32F413_423xx || STM32F446xx || STM32F469_479xx */
+#if defined(STM32F410xx) || defined(STM32F412xG) || defined(STM32F413_423xx)
 #define GPIO_AF9_FMPI2C       ((uint8_t)0x09)  /* FMPI2C Alternate Function mapping (Only for STM32F410xx Devices) */
-#endif /* STM32F410xx || STM32F412xG */
+#endif /* STM32F410xx || STM32F412xG || STM32F413_423xx */
 
 /** 
   * @brief   AF 10 selection  
@@ -374,24 +384,35 @@ typedef struct
 #if defined(STM32F446xx)
 #define GPIO_AF10_SAI2         ((uint8_t)0x0A)  /* SAI2 Alternate Function mapping */
 #endif /* STM32F446xx */
-#if defined(STM32F412xG) || defined(STM32F446xx) || defined(STM32F469_479xx)
+#if defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx) || defined(STM32F469_479xx)
 #define GPIO_AF10_QUADSPI      ((uint8_t)0x0A)  /* QuadSPI Alternate Function mapping */
-#endif /* STM32F412xG || STM32F446xx || STM32F469_479xx */
-#if defined(STM32F412xG)
+#endif /* STM32F412xG || STM32F413_423xx || STM32F446xx || STM32F469_479xx */
+#if defined(STM32F412xG) || defined(STM32F413_423xx)
 #define GPIO_AF10_FMC           ((uint8_t)0xA)  /* FMC Alternate Function mapping    */
-#define GPIO_AF10_DFSDM         ((uint8_t)0xA)  /* DFSDM Alternate Function mapping  */
-#endif /* STM32F412xG */
+#define GPIO_AF10_DFSDM1         ((uint8_t)0xA) /* DFSDM Alternate Function mapping  */
+#endif /* STM32F412xG || STM32F413_423xx */
+#if defined(STM32F413_423xx)
+#define GPIO_AF10_DFSDM2        ((uint8_t)0x0A)  /* DFSDM2 Alternate Function mapping */
+#define GPIO_AF10_SAI1          ((uint8_t)0x0A)  /* SAI1 Alternate Function mapping   */
+#endif /* STM32F413_423xx */
 /** 
   * @brief   AF 11 selection  
   */ 
 #define GPIO_AF_ETH             ((uint8_t)0x0B)  /* ETHERNET Alternate Function mapping */
+#if defined(STM32F413_423xx)
+#define GPIO_AF11_UART4         ((uint8_t)0x0B)  /* UART4 Alternate Function mapping  */
+#define GPIO_AF11_UART5         ((uint8_t)0x0B)  /* UART5 Alternate Function mapping  */
+#define GPIO_AF11_UART9         ((uint8_t)0x0B)  /* UART9 Alternate Function mapping  */
+#define GPIO_AF11_UART10        ((uint8_t)0x0B)  /* UART10 Alternate Function mapping */
+#define GPIO_AF11_CAN3          ((uint8_t)0x0B)  /* CAN3 Alternate Function mapping   */
+#endif /* STM32F413_423xx */
 
 /** 
   * @brief   AF 12 selection  
   */ 
-#if defined(STM32F40_41xxx) || defined(STM32F412xG)
+#if defined(STM32F40_41xxx) || defined(STM32F412xG) || defined(STM32F413_423xx)
 #define GPIO_AF_FSMC             ((uint8_t)0xC)  /* FSMC Alternate Function mapping                     */
-#endif /* STM32F40_41xxx || STM32F412xG */
+#endif /* STM32F40_41xxx || STM32F412xG || STM32F413_423xx */
 
 #if defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F446xx) || defined(STM32F469_479xx)
 #define GPIO_AF_FMC              ((uint8_t)0xC)  /* FMC Alternate Function mapping                      */
@@ -411,6 +432,9 @@ typedef struct
   * @brief   AF 14 selection  
   */
 #define GPIO_AF_LTDC          ((uint8_t)0x0E)  /* LCD-TFT Alternate Function mapping */
+#if defined(STM32F413_423xx)
+#define GPIO_AF14_RNG         ((uint8_t)0x0E)  /* RNG Alternate Function mapping  */
+#endif /* STM32F413_423xx */
 
 /** 
   * @brief   AF 15 selection  
@@ -491,6 +515,10 @@ typedef struct
 #if defined(STM32F412xG)
 #define IS_GPIO_AF(AF)   (((AF) < 16) && ((AF) != 11) && ((AF) != 14))
 #endif /* STM32F412xG */
+
+#if defined(STM32F413_423xx)
+#define IS_GPIO_AF(AF)   (((AF) < 16) && ((AF) != 13))
+#endif /* STM32F413_423xx */
 
 #if defined(STM32F446xx)
 #define IS_GPIO_AF(AF)   (((AF) < 16) && ((AF) != 11) && ((AF) != 14))

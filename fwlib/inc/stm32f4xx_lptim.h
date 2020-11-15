@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_lptim.h
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file contains all the functions prototypes for the LPTIM
   *          firmware library
   ******************************************************************************
@@ -44,7 +44,7 @@
 /** @addtogroup LPTIM
   * @{
   */
-#if defined(STM32F410xx)
+#if defined(STM32F410xx) || defined(STM32F413_423xx)
 /* Exported types ------------------------------------------------------------*/
 /**
   * @brief   LPTIM Init structure definition
@@ -368,7 +368,7 @@ FlagStatus LPTIM_GetFlagStatus(LPTIM_TypeDef* LPTIMx, uint32_t LPTIM_FLAG);
 void LPTIM_ClearFlag(LPTIM_TypeDef* LPTIMx, uint32_t LPTIM_CLEARF);
 ITStatus LPTIM_GetITStatus(LPTIM_TypeDef* LPTIMx, uint32_t LPTIM_IT);
 
-#endif /* STM32F410xx */
+#endif /* STM32F410xx || STM32F413_423xx */
 /**
   * @}
   */

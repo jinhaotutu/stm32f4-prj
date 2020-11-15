@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    system_stm32f4xx.c
   * @author  MCD Application Team
-  * @version V1.7.0
-  * @date    22-April-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   CMSIS Cortex-M4 Device Peripheral Access Layer System Source File.
   *          This file contains the system clock configuration for STM32F4xx devices.
   *             
@@ -335,9 +335,9 @@
 /************************* Miscellaneous Configuration ************************/
 /*!< Uncomment the following line if you need to use external SRAM or SDRAM mounted
      on STM324xG_EVAL/STM324x7I_EVAL/STM324x9I_EVAL boards as data memory  */     
-#if defined(STM32F40_41xxx) || defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F469_479xx)
+#if defined(STM32F40_41xxx) || defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F469_479xx) || defined(STM32F413_423xx)
 /* #define DATA_IN_ExtSRAM */
-#endif /* STM32F40_41xxx || STM32F427_437x || STM32F429_439xx || STM32F469_479xx */
+#endif /* STM32F40_41xxx || STM32F427_437x || STM32F429_439xx || STM32F469_479xx || STM32F413_423xx */
 
 #if defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F446xx) || defined(STM32F469_479xx)
 /* #define DATA_IN_ExtSDRAM */
@@ -369,7 +369,7 @@
 #if defined(STM32F40_41xxx) || defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F401xx) || defined(STM32F469_479xx)
  /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
  #define PLL_M      25
-#elif defined(STM32F412xG) || defined (STM32F446xx)
+#elif defined(STM32F412xG) || defined(STM32F413_423xx) || defined (STM32F446xx)
  #define PLL_M      8
 #elif defined (STM32F410xx) || defined (STM32F411xE)
  #if defined(USE_HSE_BYPASS)
@@ -386,7 +386,7 @@
 #if defined(STM32F446xx)
 /* PLL division factor for I2S, SAI, SYSTEM and SPDIF: Clock =  PLL_VCO / PLLR */
 #define PLL_R      7
-#elif defined(STM32F412xG)
+#elif defined(STM32F412xG) || defined(STM32F413_423xx)
 #define PLL_R      2
 #else
 #endif /* STM32F446xx */ 
@@ -409,11 +409,11 @@
 #define PLL_P      4
 #endif /* STM32F401xx */
 
-#if defined(STM32F410xx) || defined(STM32F411xE) || defined(STM32F412xG)
+#if defined(STM32F410xx) || defined(STM32F411xE) || defined(STM32F412xG) || defined(STM32F413_423xx)
 #define PLL_N      400
 /* SYSCLK = PLL_VCO / PLL_P */
 #define PLL_P      4   
-#endif /* STM32F410xx || STM32F411xE */
+#endif /* STM32F410xx || STM32F411xE || STM32F412xG || STM32F413_423xx */
 
 /******************************************************************************/
 
@@ -445,9 +445,9 @@
   uint32_t SystemCoreClock = 84000000;
 #endif /* STM32F401xx */
 
-#if defined(STM32F410xx) || defined(STM32F411xE) || defined(STM32F412xG)
+#if defined(STM32F410xx) || defined(STM32F411xE) || defined(STM32F412xG) || defined(STM32F413_423xx)
   uint32_t SystemCoreClock = 100000000;
-#endif /* STM32F410xx || STM32F401xE || STM32F412xG */
+#endif /* STM32F410xx || STM32F401xE || STM32F412xG || STM32F413_423xx */
 
 __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 
@@ -560,9 +560,9 @@ void SystemInit(void)
 void SystemCoreClockUpdate(void)
 {
   uint32_t tmp = 0, pllvco = 0, pllp = 2, pllsource = 0, pllm = 2;
-#if defined(STM32F412xG) || defined(STM32F446xx)  
+#if defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx)  
   uint32_t pllr = 2;
-#endif /* STM32F412xG || STM32F446xx */
+#endif /* STM32F412xG || STM32F413_423xx || STM32F446xx */
   /* Get SYSCLK source -------------------------------------------------------*/
   tmp = RCC->CFGR & RCC_CFGR_SWS;
 
@@ -581,7 +581,7 @@ void SystemCoreClockUpdate(void)
       pllsource = (RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC) >> 22;
       pllm = RCC->PLLCFGR & RCC_PLLCFGR_PLLM;
       
-#if defined(STM32F40_41xxx) || defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F401xx) || defined(STM32F412xG) || defined(STM32F446xx) || defined(STM32F469_479xx)
+#if defined(STM32F40_41xxx) || defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F401xx) || defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx) || defined(STM32F469_479xx)
       if (pllsource != 0)
       {
         /* HSE used as PLL clock source */
@@ -606,11 +606,11 @@ void SystemCoreClockUpdate(void)
         pllvco = (HSI_VALUE / pllm) * ((RCC->PLLCFGR & RCC_PLLCFGR_PLLN) >> 6);
       }  
 #endif /* USE_HSE_BYPASS */  
-#endif /* STM32F40_41xxx || STM32F427_437xx || STM32F429_439xx || STM32F401xx || STM32F412xG ||  STM32F446xx || STM32F469_479xx */  
+#endif /* STM32F40_41xxx || STM32F427_437xx || STM32F429_439xx || STM32F401xx || STM32F412xG || STM32F413_423xx ||  STM32F446xx || STM32F469_479xx */  
       pllp = (((RCC->PLLCFGR & RCC_PLLCFGR_PLLP) >>16) + 1 ) *2;
       SystemCoreClock = pllvco/pllp;      
       break;
-#if defined(STM32F412xG) || defined(STM32F446xx)      
+#if defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx)      
       case 0x0C:  /* PLL R used as system clock source */
        /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N
          SYSCLK = PLL_VCO / PLL_R
@@ -631,7 +631,7 @@ void SystemCoreClockUpdate(void)
       pllr = (((RCC->PLLCFGR & RCC_PLLCFGR_PLLR) >>28) + 1 ) *2;
       SystemCoreClock = pllvco/pllr;      
       break;
-#endif /* STM32F412xG || STM32F446xx */
+#endif /* STM32F412xG || STM32F413_423xx || STM32F446xx */
     default:
       SystemCoreClock = HSI_VALUE;
       break;
@@ -653,7 +653,7 @@ void SystemCoreClockUpdate(void)
   */
 static void SetSysClock(void)
 {
-#if defined(STM32F40_41xxx) || defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F401xx) || defined(STM32F412xG) || defined(STM32F446xx)|| defined(STM32F469_479xx)
+#if defined(STM32F40_41xxx) || defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F401xx) || defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx)|| defined(STM32F469_479xx)
 /******************************************************************************/
 /*            PLL (clocked by HSE) used as System clock source                */
 /******************************************************************************/
@@ -695,13 +695,13 @@ static void SetSysClock(void)
     RCC->CFGR |= RCC_CFGR_PPRE1_DIV4;
 #endif /* STM32F40_41xxx || STM32F427_437x || STM32F429_439xx  || STM32F412xG || STM32F446xx || STM32F469_479xx */
 
-#if defined(STM32F401xx)
-    /* PCLK2 = HCLK / 2*/
+#if defined(STM32F401xx) || defined(STM32F413_423xx)
+    /* PCLK2 = HCLK / 1*/
     RCC->CFGR |= RCC_CFGR_PPRE2_DIV1;
     
-    /* PCLK1 = HCLK / 4*/
+    /* PCLK1 = HCLK / 2*/
     RCC->CFGR |= RCC_CFGR_PPRE1_DIV2;
-#endif /* STM32F401xx */
+#endif /* STM32F401xx || STM32F413_423xx */
 
 #if defined(STM32F40_41xxx) || defined(STM32F427_437xx) || defined(STM32F429_439xx) || defined(STM32F401xx) || defined(STM32F469_479xx)    
     /* Configure the main PLL */
@@ -709,11 +709,11 @@ static void SetSysClock(void)
                    (RCC_PLLCFGR_PLLSRC_HSE) | (PLL_Q << 24);
 #endif /* STM32F40_41xxx || STM32F401xx || STM32F427_437x || STM32F429_439xx || STM32F469_479xx */
 
-#if  defined(STM32F412xG) || defined(STM32F446xx)
+#if  defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx)
     /* Configure the main PLL */
     RCC->PLLCFGR = PLL_M | (PLL_N << 6) | (((PLL_P >> 1) -1) << 16) |
                    (RCC_PLLCFGR_PLLSRC_HSE) | (PLL_Q << 24) | (PLL_R << 28);
-#endif /* STM32F412xG || STM32F446xx */    
+#endif /* STM32F412xG || STM32F413_423xx || STM32F446xx */    
     
     /* Enable the main PLL */
     RCC->CR |= RCC_CR_PLLON;
@@ -737,10 +737,15 @@ static void SetSysClock(void)
     FLASH->ACR = FLASH_ACR_PRFTEN | FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_5WS;
 #endif /* STM32F427_437x || STM32F429_439xx || STM32F446xx || STM32F469_479xx */
 
-#if defined(STM32F40_41xxx)  || defined(STM32F412xG)   
+#if defined(STM32F40_41xxx)  || defined(STM32F412xG)  
     /* Configure Flash prefetch, Instruction cache, Data cache and wait state */
     FLASH->ACR = FLASH_ACR_PRFTEN | FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_5WS;
 #endif /* STM32F40_41xxx  || STM32F412xG */
+
+#if defined(STM32F413_423xx)  
+    /* Configure Flash prefetch, Instruction cache, Data cache and wait state */
+    FLASH->ACR = FLASH_ACR_PRFTEN | FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_3WS;
+#endif /* STM32F413_423xx */
 
 #if defined(STM32F401xx)
     /* Configure Flash prefetch, Instruction cache, Data cache and wait state */

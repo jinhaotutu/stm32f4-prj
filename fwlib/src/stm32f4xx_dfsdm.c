@@ -2,10 +2,10 @@
   ******************************************************************************
   * @file    stm32f4xx_dfsdm.c
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file provides firmware functions to manage the following
-  *          functionalities of Digital Filter for Sigma Delta modulator 
+  *          functionalities of Digital Filter for Sigma Delta modulator
   *          (DFSDM) peripheral:
   *           + Initialization functions.
   *           + Configuration functions.
@@ -30,8 +30,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -51,14 +51,13 @@
   * @brief DFSDM driver modules
   * @{
   */
-#if defined(STM32F412xG)
+#if defined(STM32F412xG) || defined(STM32F413_423xx)
 
 /* External variables --------------------------------------------------------*/
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
 
 #define CHCFGR_INIT_CLEAR_MASK               (uint32_t) 0xFFFE0F10
-
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -93,14 +92,31 @@
 void DFSDM_DeInit(void)
 {
   /* Enable LPTx reset state */
-  RCC_APB2PeriphResetCmd(RCC_APB2Periph_DFSDM, ENABLE);
-  RCC_APB2PeriphResetCmd(RCC_APB2Periph_DFSDM, DISABLE);
+  RCC_APB2PeriphResetCmd(RCC_APB2Periph_DFSDM1, ENABLE);
+  RCC_APB2PeriphResetCmd(RCC_APB2Periph_DFSDM1, DISABLE);
+#if defined(STM32F413_423xx)
+  RCC_APB2PeriphResetCmd(RCC_APB2Periph_DFSDM2, ENABLE);
+  RCC_APB2PeriphResetCmd(RCC_APB2Periph_DFSDM2, DISABLE);
+#endif /* STM32F413_423xx */
 }
 
 /**
   * @brief  Initializes the DFSDM serial channels transceiver  according to the specified
   *         parameters in the DFSDM_TransceiverInit.
-  * @param  DFSDM_Channelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
+  * @param  DFSDM_Channelx: specifies the channel to be selected.
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_Channel0 : DFSDM 1 Channel 0
+  *            @arg DFSDM1_Channel1 : DFSDM 1 Channel 1
+  *            @arg DFSDM1_Channel2 : DFSDM 1 Channel 2
+  *            @arg DFSDM1_Channel3 : DFSDM 1 Channel 3
+  *            @arg DFSDM2_Channel0 : DFSDM 2 Channel 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel1 : DFSDM 2 Channel 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel2 : DFSDM 2 Channel 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel3 : DFSDM 2 Channel 3 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel4 : DFSDM 2 Channel 4 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel5 : DFSDM 2 Channel 5 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel6 : DFSDM 2 Channel 6 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel7 : DFSDM 2 Channel 7 (available only for STM32F413_423xx devices)
   * @param  DFSDM_TransceiverInitStruct: pointer to a DFSDM_TransceiverInitTypeDef structure
   *         that contains the configuration information for the specified channel.
   * @retval None
@@ -113,10 +129,10 @@ void DFSDM_TransceiverInit(DFSDM_Channel_TypeDef* DFSDM_Channelx, DFSDM_Transcei
 
     /* Check the parameters */
     assert_param(IS_DFSDM_ALL_CHANNEL(DFSDM_Channelx));
-    assert_param(IS_DFSDM_INTERFACE(DFSDM_TransceiverInitStruct->DFSDM_Interface));    
+    assert_param(IS_DFSDM_INTERFACE(DFSDM_TransceiverInitStruct->DFSDM_Interface));
     assert_param(IS_DFSDM_Input_MODE(DFSDM_TransceiverInitStruct->DFSDM_Input));
     assert_param(IS_DFSDM_Redirection_STATE(DFSDM_TransceiverInitStruct->DFSDM_Redirection));
-    assert_param(IS_DFSDM_PACK_MODE(DFSDM_TransceiverInitStruct->DFSDM_PackingMode));    
+    assert_param(IS_DFSDM_PACK_MODE(DFSDM_TransceiverInitStruct->DFSDM_PackingMode));
     assert_param(IS_DFSDM_CLOCK(DFSDM_TransceiverInitStruct->DFSDM_Clock));
     assert_param(IS_DFSDM_DATA_RIGHT_BIT_SHIFT(DFSDM_TransceiverInitStruct->DFSDM_DataRightShift));
     assert_param(IS_DFSDM_OFFSET(DFSDM_TransceiverInitStruct->DFSDM_Offset));
@@ -189,14 +205,21 @@ void DFSDM_TransceiverStructInit(DFSDM_TransceiverInitTypeDef* DFSDM_Transceiver
 /**
   * @brief  Initializes the DFSDMx Filter according to the specified
   *         parameters in the DFSDM_FilterInitStruct.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_FilterInitStruct: pointer to a DFSDM_FilterInitTypeDef structure
   *         that contains the configuration information for the specified filter.
   * @retval None
   *
   * @note   It is mandatory to disable the selected filter to use this function.
   */
-void DFSDM_FilterInit(DFSDM_TypeDef* DFSDMx, DFSDM_FilterInitTypeDef* DFSDM_FilterInitStruct)
+void DFSDM_FilterInit(DFSDM_Filter_TypeDef* DFSDMx, DFSDM_FilterInitTypeDef* DFSDM_FilterInitStruct)
 {
     uint32_t tmpreg1 = 0;
 
@@ -254,7 +277,7 @@ void DFSDM_FilterStructInit(DFSDM_FilterInitTypeDef* DFSDM_FilterInitStruct)
  ===============================================================================
     This section provides functions allowing to configure DFSDM:
     - Enable/Disable (DFSDM peripheral, Channel, Filter)
-    - Configure Clock output 
+    - Configure Clock output
     - Configure Injected/Regular channels for Conversion
     - Configure  short circuit detector
     - Configure Analog watchdog filter
@@ -263,13 +286,14 @@ void DFSDM_FilterStructInit(DFSDM_FilterInitTypeDef* DFSDM_FilterInitStruct)
   * @{
   */
 
+#if defined(STM32F412xG)
 /**
   * @brief  Enables or disables the DFSDM peripheral.
   * @param  NewState: new state of the DFSDM interface.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
-void DFSDM_Cmd(FunctionalState NewState)
+void DFSDM_Command(FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_FUNCTIONAL_STATE(NewState));
@@ -285,10 +309,66 @@ void DFSDM_Cmd(FunctionalState NewState)
     DFSDM1_Channel0 -> CHCFGR1 &= ~(DFSDM_CHCFGR1_DFSDMEN);
   }
 }
+#endif /* STM32F412xG */
 
+#if defined(STM32F413_423xx)
+/**
+  * @brief  Enables or disables the DFSDM peripheral.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2.   
+  * @param  NewState: new state of the DFSDM interface.
+  *         This parameter can be: ENABLE or DISABLE.
+  * @retval None
+  */
+void DFSDM_Cmd(uint32_t Instance, FunctionalState NewState)
+{ 
+  /* Check the parameters */
+  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  
+  if(Instance == 1)
+  {
+    if (NewState != DISABLE)
+    {
+      /* Set the ENABLE bit */
+      DFSDM1_Channel0 -> CHCFGR1 |= DFSDM_CHCFGR1_DFSDMEN;
+    }
+    else
+    {
+      /* Reset the ENABLE bit */
+      DFSDM1_Channel0 -> CHCFGR1 &= ~(DFSDM_CHCFGR1_DFSDMEN);
+    }
+  }
+  else /* DFSDM2 */
+  {
+    if (NewState != DISABLE)
+    {
+      /* Set the ENABLE bit */
+      DFSDM2_Channel0 -> CHCFGR1 |= DFSDM_CHCFGR1_DFSDMEN;
+    }
+    else
+    {
+      /* Reset the ENABLE bit */
+      DFSDM2_Channel0 -> CHCFGR1 &= ~(DFSDM_CHCFGR1_DFSDMEN);
+    } 
+  }
+}
+#endif /* STM32F413_423xx */
 /**
   * @brief  Enables or disables the specified DFSDM serial channelx.
-  * @param  DFSDM_Channelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
+  * @param  DFSDM_Channelx: specifies the channel to be selected.
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_Channel0 : DFSDM 1 Channel 0
+  *            @arg DFSDM1_Channel1 : DFSDM 1 Channel 1
+  *            @arg DFSDM1_Channel2 : DFSDM 1 Channel 2
+  *            @arg DFSDM1_Channel3 : DFSDM 1 Channel 3
+  *            @arg DFSDM2_Channel0 : DFSDM 2 Channel 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel1 : DFSDM 2 Channel 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel2 : DFSDM 2 Channel 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel3 : DFSDM 2 Channel 3 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel4 : DFSDM 2 Channel 4 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel5 : DFSDM 2 Channel 5 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel6 : DFSDM 2 Channel 6 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel7 : DFSDM 2 Channel 7 (available only for STM32F413_423xx devices)
   * @param  NewState: new state of the DFSDM serial channelx .
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
@@ -313,12 +393,19 @@ void DFSDM_ChannelCmd(DFSDM_Channel_TypeDef* DFSDM_Channelx, FunctionalState New
 
 /**
   * @brief  Enables or disables the specified DFSDMx Filter.
-  * @param  DFSDMx: where x can be 0, 1 to select the DFSDM module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  NewState: new state of the selected DFSDM module.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
-void DFSDM_FilterCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState)
+void DFSDM_FilterCmd(DFSDM_Filter_TypeDef* DFSDMx, FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -336,6 +423,7 @@ void DFSDM_FilterCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState)
   }
 }
 
+#if defined(STM32F412xG)
 /**
   * @brief  Configures the Output serial clock divider.
   * @param  DFSDM_ClkOutDivision: Defines the divider for the output serial clock
@@ -369,32 +457,146 @@ void DFSDM_ConfigClkOutputDivider(uint32_t DFSDM_ClkOutDivision)
   * @param  DFSDM_ClkOutSource: Defines the divider for the output serial clock
   *         This parameter can be a value of:
   *            @arg DFSDM_ClkOutSource_SysClock
-  *            @arg DFSDM_ClkOutSource_AudioClock   
+  *            @arg DFSDM_ClkOutSource_AudioClock
   * @retval None
   */
 void DFSDM_ConfigClkOutputSource(uint32_t DFSDM_ClkOutSource)
 {
-    uint32_t tmpreg1 = 0;
+  uint32_t tmpreg1 = 0;
 
+  /* Check the parameters */
+  assert_param(IS_DFSDM_CLOCK_OUT_SOURCE(DFSDM_ClkOutSource));
+
+  /* Get the DFSDM_Channel0 CHCFGR1 value */
+  tmpreg1 = DFSDM1_Channel0 -> CHCFGR1;
+
+  /* Clear the CKOUTSRC bit */
+  tmpreg1 &= ~(DFSDM_CHCFGR1_CKOUTSRC);
+
+  /* Set or Reset the CKOUTSRC bit */
+  tmpreg1 |= DFSDM_ClkOutSource;
+
+  /* Write to DFSDM Channel0 CHCFGR1 */
+  DFSDM1_Channel0 -> CHCFGR1 = tmpreg1;
+}
+#endif /* STM32F412xG */
+#if defined(STM32F413_423xx)
+/**
+  * @brief  Configures the Output serial clock divider.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2.              
+  * @param  DFSDM_ClkOutDivision: Defines the divider for the output serial clock
+  *         This parameter can be a value between 1 and 256.
+  * @retval None
+  * @note   The output serial clock is stopped if the divider =1.
+  *         By default the serial output clock is stopped.
+  */
+void DFSDM_ConfigClkOutputDivider(uint32_t Instance, uint32_t DFSDM_ClkOutDivision)
+{
+  uint32_t tmpreg1 = 0;
+  
+  if(Instance == 1)
+  {
     /* Check the parameters */
-    assert_param(IS_DFSDM_CLOCK_OUT_SOURCE(DFSDM_ClkOutSource));
-
+    assert_param(IS_DFSDM_CLOCK_OUT_DIVIDER(DFSDM_ClkOutDivision));
+    
     /* Get the DFSDM_Channel0 CHCFGR1 value */
     tmpreg1 = DFSDM1_Channel0 -> CHCFGR1;
-
-    /* Clear the CKOUTSRC bit */
-    tmpreg1 &= ~(DFSDM_CHCFGR1_CKOUTSRC);
-
-    /* Set or Reset the CKOUTSRC bit */
-    tmpreg1 |= DFSDM_ClkOutSource;
-
+    
+    /* Clear the CKOUTDIV bits */
+    tmpreg1 &= (uint32_t)(~DFSDM_CHCFGR1_CKOUTDIV);
+    
+    /* Set or Reset the CKOUTDIV bits */
+    tmpreg1 |= (uint32_t)((DFSDM_ClkOutDivision - 1) << 16);
+    
     /* Write to DFSDM Channel0 CHCFGR1 */
     DFSDM1_Channel0 -> CHCFGR1 = tmpreg1;
+  }
+  else /* DFSDM2 */
+  {
+    /* Check the parameters */
+    assert_param(IS_DFSDM_CLOCK_OUT_DIVIDER(DFSDM_ClkOutDivision));
+    
+    /* Get the DFSDM_Channel0 CHCFGR1 value */
+    tmpreg1 = DFSDM2_Channel0 -> CHCFGR1;
+    
+    /* Clear the CKOUTDIV bits */
+    tmpreg1 &= (uint32_t)(~DFSDM_CHCFGR1_CKOUTDIV);
+    
+    /* Set or Reset the CKOUTDIV bits */
+    tmpreg1 |= (uint32_t)((DFSDM_ClkOutDivision - 1) << 16);
+    
+    /* Write to DFSDM Channel0 CHCFGR1 */
+    DFSDM2_Channel0 -> CHCFGR1 = tmpreg1; 
+  }
 }
 
 /**
+  * @brief  Configures the Output serial clock source.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2.  
+  * @param  DFSDM_ClkOutSource: Defines the divider for the output serial clock
+  *         This parameter can be a value of:
+  *            @arg DFSDM_ClkOutSource_SysClock
+  *            @arg DFSDM_ClkOutSource_AudioClock
+  * @retval None
+  */
+void DFSDM_ConfigClkOutputSource(uint32_t Instance, uint32_t DFSDM_ClkOutSource)
+{
+  uint32_t tmpreg1 = 0;
+
+  if(Instance == 1)
+  {
+    /* Check the parameters */
+    assert_param(IS_DFSDM_CLOCK_OUT_SOURCE(DFSDM_ClkOutSource));
+    
+    /* Get the DFSDM_Channel0 CHCFGR1 value */
+    tmpreg1 = DFSDM1_Channel0 -> CHCFGR1;
+    
+    /* Clear the CKOUTSRC bit */
+    tmpreg1 &= ~(DFSDM_CHCFGR1_CKOUTSRC);
+    
+    /* Set or Reset the CKOUTSRC bit */
+    tmpreg1 |= DFSDM_ClkOutSource;
+    
+    /* Write to DFSDM Channel0 CHCFGR1 */
+    DFSDM1_Channel0 -> CHCFGR1 = tmpreg1;
+  }
+  else /* DFSDM2 */
+  {
+    /* Check the parameters */
+    assert_param(IS_DFSDM_CLOCK_OUT_SOURCE(DFSDM_ClkOutSource));
+    
+    /* Get the DFSDM_Channel0 CHCFGR1 value */
+    tmpreg1 = DFSDM2_Channel0 -> CHCFGR1;
+    
+    /* Clear the CKOUTSRC bit */
+    tmpreg1 &= ~(DFSDM_CHCFGR1_CKOUTSRC);
+    
+    /* Set or Reset the CKOUTSRC bit */
+    tmpreg1 |= DFSDM_ClkOutSource;
+    
+    /* Write to DFSDM Channel0 CHCFGR1 */
+    DFSDM2_Channel0 -> CHCFGR1 = tmpreg1;
+  }
+}
+#endif /* STM32F413_423xx */
+/**
   * @brief  Enables or disables the specified Break_i siganl to the specified DFSDM_Channelx.
-  * @param  DFSDM_Channelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
+  * @param  DFSDM_Channelx: specifies the channel to be selected.
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_Channel0 : DFSDM 1 Channel 0
+  *            @arg DFSDM1_Channel1 : DFSDM 1 Channel 1
+  *            @arg DFSDM1_Channel2 : DFSDM 1 Channel 2
+  *            @arg DFSDM1_Channel3 : DFSDM 1 Channel 3
+  *            @arg DFSDM2_Channel0 : DFSDM 2 Channel 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel1 : DFSDM 2 Channel 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel2 : DFSDM 2 Channel 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel3 : DFSDM 2 Channel 3 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel4 : DFSDM 2 Channel 4 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel5 : DFSDM 2 Channel 5 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel6 : DFSDM 2 Channel 6 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel7 : DFSDM 2 Channel 7 (available only for STM32F413_423xx devices)
   * @param  DFSDM_SCDBreak_i: where i can be a value from 0 to 3 to select the specified Break signal.
   * @param  NewState: new state of the selected DFSDM_SCDBreak_i.
   *         This parameter can be: ENABLE or DISABLE.
@@ -421,7 +623,20 @@ void DFSDM_ConfigBRKAnalogWatchDog(DFSDM_Channel_TypeDef* DFSDM_Channelx, uint32
 
 /**
   * @brief  Enables or disables the specified Break_i siganl to the specified DFSDM_Channelx.
-  * @param  DFSDM_Channelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
+  * @param  DFSDM_Channelx: specifies the channel to be selected.
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_Channel0 : DFSDM 1 Channel 0
+  *            @arg DFSDM1_Channel1 : DFSDM 1 Channel 1
+  *            @arg DFSDM1_Channel2 : DFSDM 1 Channel 2
+  *            @arg DFSDM1_Channel3 : DFSDM 1 Channel 3
+  *            @arg DFSDM2_Channel0 : DFSDM 2 Channel 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel1 : DFSDM 2 Channel 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel2 : DFSDM 2 Channel 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel3 : DFSDM 2 Channel 3 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel4 : DFSDM 2 Channel 4 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel5 : DFSDM 2 Channel 5 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel6 : DFSDM 2 Channel 6 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel7 : DFSDM 2 Channel 7 (available only for STM32F413_423xx devices)
   * @param  DFSDM_SCDBreak_i: where i can be a value from 0 to 3 to select the specified Break signal.
   * @param  NewState: new state of the selected DFSDM_SCDBreak_i.
   *         This parameter can be: ENABLE or DISABLE.
@@ -448,7 +663,20 @@ void DFSDM_ConfigBRKShortCircuitDetector(DFSDM_Channel_TypeDef* DFSDM_Channelx, 
 
 /**
   * @brief  Defines the threshold counter for the short circuit detector for the selected DFSDM_Channelx.
-  * @param  DFSDM_Channelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
+  * @param  DFSDM_Channelx: specifies the channel to be selected.
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_Channel0 : DFSDM 1 Channel 0
+  *            @arg DFSDM1_Channel1 : DFSDM 1 Channel 1
+  *            @arg DFSDM1_Channel2 : DFSDM 1 Channel 2
+  *            @arg DFSDM1_Channel3 : DFSDM 1 Channel 3
+  *            @arg DFSDM2_Channel0 : DFSDM 2 Channel 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel1 : DFSDM 2 Channel 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel2 : DFSDM 2 Channel 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel3 : DFSDM 2 Channel 3 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel4 : DFSDM 2 Channel 4 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel5 : DFSDM 2 Channel 5 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel6 : DFSDM 2 Channel 6 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel7 : DFSDM 2 Channel 7 (available only for STM32F413_423xx devices)
   * @param  DFSDM_SCDThreshold: The threshold counter, this parameter can be a value between 0 and 255.
   * @retval None
   */
@@ -476,13 +704,20 @@ void DFSDM_ConfigShortCircuitThreshold(DFSDM_Channel_TypeDef* DFSDM_Channelx, ui
 /**
   * @brief  Selects the channel to be guarded by the Analog watchdog for the selected DFSDMx,
   *         and select if the fast analog watchdog is enabled or not.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_AWDChannelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
   * @param  DFSDM_AWDFastMode: The analog watchdog fast mode.
   *         This parameter can be a value of @ref DFSDM_AWD_Fast_Mode_Selection.
   * @retval None
   */
-void DFSDM_ConfigAnalogWatchdog(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint32_t DFSDM_AWDFastMode)
+void DFSDM_ConfigAnalogWatchdog(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint32_t DFSDM_AWDFastMode)
 {
   uint32_t tmpreg1 = 0;
   uint32_t tmpreg2 = 0;
@@ -519,12 +754,19 @@ void DFSDM_ConfigAnalogWatchdog(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannel
 
 /**
   * @brief  Selects the channel to be guarded by the Analog watchdog of the selected DFSDMx, and the mode to be used.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_ExtremChannelx: where x can be a value from 0 to 7 to select the Channel to be connected
   *         to the Extremes detector.
   * @retval None
   */
-void DFSDM_SelectExtremesDetectorChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_ExtremChannelx)
+void DFSDM_SelectExtremesDetectorChannel(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_ExtremChannelx)
 {
   uint32_t tmpreg1 = 0;
 
@@ -547,88 +789,129 @@ void DFSDM_SelectExtremesDetectorChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_E
 
 /**
   * @brief  Returns the regular conversion data by the DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval The converted regular data.
   * @note   This function returns a signed value.
   */
-int32_t DFSDM_GetRegularConversionData(DFSDM_TypeDef* DFSDMx)
+int32_t DFSDM_GetRegularConversionData(DFSDM_Filter_TypeDef* DFSDMx)
 {
   uint32_t reg = 0;
   int32_t  value = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
-  
+
   /* Get value of data register for regular channel */
   reg = DFSDMx -> FLTRDATAR;
-  
+
   /* Extract conversion value */
-  value = ((int32_t)((reg & 0xFFFFFF00) >> 8));
-  
+  value = (((reg & 0xFFFFFF00) >> 8));
+
   /* Return the conversion result */
   return  value;
 }
 
 /**
   * @brief  Returns the injected conversion data by the DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval The converted regular data.
   * @note   This function returns a signed value.
   */
-int32_t DFSDM_GetInjectedConversionData(DFSDM_TypeDef* DFSDMx)
+int32_t DFSDM_GetInjectedConversionData(DFSDM_Filter_TypeDef* DFSDMx)
 {
   uint32_t reg = 0;
   int32_t  value = 0;
-  
+
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
-  
+
   /* Get value of data register for regular channel */
   reg = DFSDMx -> FLTJDATAR;
-  
+
   /* Extract conversion value */
-  value = ((int32_t)((reg & 0xFFFFFF00) >> 8));
-  
+  value = ((reg & 0xFFFFFF00) >> 8);
+
   /* Return the conversion result */
   return  value;
 }
 
 /**
   * @brief  Returns the highest value converted by the DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval The highest converted value.
   * @note   This function returns a signed value.
   */
-int32_t DFSDM_GetMaxValue(DFSDM_TypeDef* DFSDMx)
+int32_t DFSDM_GetMaxValue(DFSDM_Filter_TypeDef* DFSDMx)
 {
+  int32_t value = 0;
+  
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
 
+  value = ((DFSDMx -> FLTEXMAX) >> 8);
   /* Return the highest converted value */
-  return  (((int32_t)(DFSDMx -> FLTEXMAX)) >> 8);
+  return value;
 }
 
 /**
   * @brief  Returns the lowest value converted by the DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval The lowest converted value.
   * @note   This function returns a signed value.
   */
-int32_t DFSDM_GetMinValue(DFSDM_TypeDef* DFSDMx)
+int32_t DFSDM_GetMinValue(DFSDM_Filter_TypeDef* DFSDMx)
 {
+  int32_t value = 0;
+  
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
 
+  value = ((DFSDMx -> FLTEXMIN) >> 8);
   /* Return the lowest conversion value */
-  return  (((int32_t)(DFSDMx ->FLTEXMIN )) >> 8);
+  return value;
 }
 
 /**
   * @brief  Returns the number of channel on which is captured the highest converted data by the DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval The highest converted value.
   */
-int32_t DFSDM_GetMaxValueChannel(DFSDM_TypeDef* DFSDMx)
+int32_t DFSDM_GetMaxValueChannel(DFSDM_Filter_TypeDef* DFSDMx)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -639,10 +922,17 @@ int32_t DFSDM_GetMaxValueChannel(DFSDM_TypeDef* DFSDMx)
 
 /**
   * @brief  Returns the number of channel on which is captured the lowest converted data by the DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval The lowest converted value.
   */
-int32_t DFSDM_GetMinValueChannel(DFSDM_TypeDef* DFSDMx)
+int32_t DFSDM_GetMinValueChannel(DFSDM_Filter_TypeDef* DFSDMx)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -653,10 +943,17 @@ int32_t DFSDM_GetMinValueChannel(DFSDM_TypeDef* DFSDMx)
 
 /**
   * @brief  Returns the conversion time (in 28-bit timer unit) for DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval Conversion time.
   */
-uint32_t DFSDM_GetConversionTime(DFSDM_TypeDef* DFSDMx)
+uint32_t DFSDM_GetConversionTime(DFSDM_Filter_TypeDef* DFSDMx)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -668,7 +965,20 @@ uint32_t DFSDM_GetConversionTime(DFSDM_TypeDef* DFSDMx)
 /**
   * @brief  Configures Sinc Filter for the Analog watchdog by setting
   *         the Sinc filter order and the Oversampling ratio for the specified DFSDM_Channelx.
-  * @param  DFSDM_Channelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
+  * @param  DFSDM_Channelx: specifies the channel to be selected.
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_Channel0 : DFSDM 1 Channel 0
+  *            @arg DFSDM1_Channel1 : DFSDM 1 Channel 1
+  *            @arg DFSDM1_Channel2 : DFSDM 1 Channel 2
+  *            @arg DFSDM1_Channel3 : DFSDM 1 Channel 3
+  *            @arg DFSDM2_Channel0 : DFSDM 2 Channel 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel1 : DFSDM 2 Channel 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel2 : DFSDM 2 Channel 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel3 : DFSDM 2 Channel 3 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel4 : DFSDM 2 Channel 4 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel5 : DFSDM 2 Channel 5 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel6 : DFSDM 2 Channel 6 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel7 : DFSDM 2 Channel 7 (available only for STM32F413_423xx devices)
   * @param  DFSDM_AWDSincOrder: The Sinc Filter order this parameter can be a value of @ref DFSDM_AWD_Sinc_Order.
   * @param  DFSDM_AWDSincOverSampleRatio: The Filter Oversampling ratio, this parameter can be a value between 1 and 32.
   * @retval None
@@ -697,7 +1007,20 @@ void DFSDM_ConfigAWDFilter(DFSDM_Channel_TypeDef* DFSDM_Channelx, uint32_t DFSDM
 
 /**
   * @brief  Returns the last Analog Watchdog Filter conversion result data for channelx.
-  * @param  DFSDM_Channelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
+  * @param  DFSDM_Channelx: specifies the channel to be selected.
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_Channel0 : DFSDM 1 Channel 0
+  *            @arg DFSDM1_Channel1 : DFSDM 1 Channel 1
+  *            @arg DFSDM1_Channel2 : DFSDM 1 Channel 2
+  *            @arg DFSDM1_Channel3 : DFSDM 1 Channel 3
+  *            @arg DFSDM2_Channel0 : DFSDM 2 Channel 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel1 : DFSDM 2 Channel 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel2 : DFSDM 2 Channel 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel3 : DFSDM 2 Channel 3 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel4 : DFSDM 2 Channel 4 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel5 : DFSDM 2 Channel 5 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel6 : DFSDM 2 Channel 6 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_Channel7 : DFSDM 2 Channel 7 (available only for STM32F413_423xx devices)
   * @retval The Data conversion value.
   */
 uint32_t DFSDM_GetAWDConversionValue(DFSDM_Channel_TypeDef* DFSDM_Channelx)
@@ -712,6 +1035,14 @@ uint32_t DFSDM_GetAWDConversionValue(DFSDM_Channel_TypeDef* DFSDM_Channelx)
 
 /**
   * @brief  Configures the High Threshold and the Low threshold for the Analog watchdog of the selected DFSDMx.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_HighThreshold: High threshold value. This parameter can be value between 0 and 0xFFFFFF.
   * @param  DFSDM_LowThreshold: Low threshold value. This parameter can be value between 0 and 0xFFFFFF.
   * @retval None.
@@ -719,7 +1050,7 @@ uint32_t DFSDM_GetAWDConversionValue(DFSDM_Channel_TypeDef* DFSDM_Channelx)
   *         only the higher 16 bits define the 16-bit threshold compared with analog watchdog filter output.
   */
 
-void DFSDM_SetAWDThreshold(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_HighThreshold, uint32_t DFSDM_LowThreshold)
+void DFSDM_SetAWDThreshold(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_HighThreshold, uint32_t DFSDM_LowThreshold)
 {
     uint32_t tmpreg1 = 0;
     uint32_t tmpreg2 = 0;
@@ -755,13 +1086,20 @@ void DFSDM_SetAWDThreshold(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_HighThreshold, 
 
 /**
   * @brief  Selects the injected channel for the selected DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_InjectedChannelx: where x can be a value from 0 to 7 to select the Channel to be configuraed as
   *         injected channel.
   * @retval None
   * @note   User can select up to 8 channels.
   */
-void DFSDM_SelectInjectedChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_InjectedChannelx)
+void DFSDM_SelectInjectedChannel(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_InjectedChannelx)
 {
   uint32_t tmpreg1 = 0;
 
@@ -784,13 +1122,20 @@ void DFSDM_SelectInjectedChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_InjectedC
 
 /**
   * @brief  Selects the regular channel for the selected DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_RegularChannelx: where x can be a value from 0 to 7 to select the Channel to be configurated as
   *         regular channel.
   * @retval None
   * @note   User can select only one channel.
   */
-void DFSDM_SelectRegularChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_RegularChannelx)
+void DFSDM_SelectRegularChannel(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_RegularChannelx)
 {
   uint32_t tmpreg1 = 0;
 
@@ -813,10 +1158,17 @@ void DFSDM_SelectRegularChannel(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_RegularCha
 
 /**
   * @brief  Starts a software start for the injected group of channels of the selected DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval None
   */
-void DFSDM_StartSoftwareInjectedConversion(DFSDM_TypeDef* DFSDMx)
+void DFSDM_StartSoftwareInjectedConversion(DFSDM_Filter_TypeDef* DFSDMx)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -827,10 +1179,17 @@ void DFSDM_StartSoftwareInjectedConversion(DFSDM_TypeDef* DFSDMx)
 
 /**
   * @brief  Starts a software start of the regular channel of the selected DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval None
   */
-void DFSDM_StartSoftwareRegularConversion(DFSDM_TypeDef* DFSDMx)
+void DFSDM_StartSoftwareRegularConversion(DFSDM_Filter_TypeDef* DFSDMx)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -841,7 +1200,14 @@ void DFSDM_StartSoftwareRegularConversion(DFSDM_TypeDef* DFSDMx)
 
 /**
   * @brief  Selects the Trigger signal to launch the injected conversions of the selected DFSDMx.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_InjectedTrigger: the trigger signal.
   *         This parameter can be a value of: @ref DFSDM_Injected_Trigger_signal
   * @param  DFSDM_TriggerEdge: the edge of the selected trigger
@@ -850,7 +1216,7 @@ void DFSDM_StartSoftwareRegularConversion(DFSDM_TypeDef* DFSDMx)
   * @note   This function can be used only when the filter is disabled, use DFSDM_FilterCmd()
   *         to disable the filter.
   */
-void DFSDM_ConfigInjectedTrigger(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_Trigger, uint32_t DFSDM_TriggerEdge)
+void DFSDM_ConfigInjectedTrigger(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_Trigger, uint32_t DFSDM_TriggerEdge)
 {
   uint32_t tmpreg1 = 0;
 
@@ -884,12 +1250,19 @@ void DFSDM_ConfigInjectedTrigger(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_Trigger, 
 /**
   * @brief  Starts an injected conversion synchronously when in DFSDM0
   *         an injected conversion started by software.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval None
   * @note   This function can be used only when the filter is disabled, use DFSDM_FilterCmd()
   *         to disable the filter.
   */
-void DFSDM_SynchronousFilter0InjectedStart(DFSDM_TypeDef* DFSDMx)
+void DFSDM_SynchronousFilter0InjectedStart(DFSDM_Filter_TypeDef* DFSDMx)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_SYNC_FILTER(DFSDMx));
@@ -901,12 +1274,19 @@ void DFSDM_SynchronousFilter0InjectedStart(DFSDM_TypeDef* DFSDMx)
 /**
   * @brief  Starts a regular conversion synchronously when in DFSDM0
   *         a regular conversion started by software.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @retval None
   * @note   This function can be used only when the filter is disabled, use DFSDM_FilterCmd()
   *         to disable the filter.
   */
-void DFSDM_SynchronousFilter0RegularStart(DFSDM_TypeDef* DFSDMx)
+void DFSDM_SynchronousFilter0RegularStart(DFSDM_Filter_TypeDef* DFSDMx)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_SYNC_FILTER(DFSDMx));
@@ -917,12 +1297,19 @@ void DFSDM_SynchronousFilter0RegularStart(DFSDM_TypeDef* DFSDMx)
 
 /**
   * @brief  Enables or Disables the continue mode for Regular conversion for the selected filter DFSDMx.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  NewState: new state of the Continuous mode.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
-void DFSDM_RegularContinuousModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState)
+void DFSDM_RegularContinuousModeCmd(DFSDM_Filter_TypeDef* DFSDMx, FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -942,7 +1329,14 @@ void DFSDM_RegularContinuousModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewSt
 
 /**
   * @brief  Enables or Disables the Fast mode for the selected filter DFSDMx.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  NewState: new state of the Fast mode.
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
@@ -952,7 +1346,7 @@ void DFSDM_RegularContinuousModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewSt
   * @note   This function can be used only when the filter is disabled, use DFSDM_FilterCmd()
   *         to disable the filter.
   */
-void DFSDM_FastModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState)
+void DFSDM_FastModeCmd(DFSDM_Filter_TypeDef* DFSDMx, FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -973,7 +1367,14 @@ void DFSDM_FastModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState)
 /**
   * @brief  Selects the injected conversions mode for the selected DFSDMx.
   *         Injected conversions can operates in Single mode or Scan mode.
-  * @param  DFSDMx: where x can be a value from 0 to 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_InjectConvMode: The injected conversion mode, this parameter can be:
   *     @arg DFSDM_InjectConvMode_Single
   *     @arg DFSDM_InjectConvMode_Scan
@@ -981,7 +1382,7 @@ void DFSDM_FastModeCmd(DFSDM_TypeDef* DFSDMx, FunctionalState NewState)
   * @note   This function can be used only when the filter is disabled, use DFSDM_FilterCmd()
   *         to disable the filter.
   */
-void DFSDM_SelectInjectedConversionMode(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_InjectConvMode)
+void DFSDM_SelectInjectedConversionMode(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_InjectConvMode)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -996,7 +1397,14 @@ void DFSDM_SelectInjectedConversionMode(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_In
 
 /**
   * @brief  Enables or Disables the DMA to read data for the injected channel group of the selected filter DFSDMx.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM Module.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_DMAConversionMode: Selects the mode to be configured for DMA read  .
   *            @arg DFSDM_DMAConversionMode_Regular:  DMA channel Enabled/Disabled to read data for the regular conversion
   *            @arg DFSDM_DMAConversionMode_Injected: DMA channel Enabled/Disabled to read data for the Injected conversion
@@ -1006,7 +1414,7 @@ void DFSDM_SelectInjectedConversionMode(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_In
   * @note   This function can be used only when the filter is disabled, use DFSDM_FilterCmd()
   *         to disable the filter.
   */
-void DFSDM_DMATransferConfig(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_DMAConversionMode, FunctionalState NewState)
+void DFSDM_DMATransferConfig(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_DMAConversionMode, FunctionalState NewState)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -1057,14 +1465,21 @@ void DFSDM_DMATransferConfig(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_DMAConversion
   - To clear a flag or an interrupt, use DFSDM_ClearFlag,DFSDM_ClearClockAbsenceFlag,
     DFSDM_ClearShortCircuitFlag,DFSDM_ClearAnalogWatchdogFlag functions with the
     corresponding flag (interrupt).
- 
+
 @endverbatim
   * @{
   */
 
 /**
   * @brief  Enables or disables the specified DFSDMx interrupts.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM peripheral.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_IT: specifies the DFSDM interrupts sources to be enabled or disabled.
   *         This parameter can be any combination of the following values:
   *            @arg DFSDM_IT_JEOC: End of injected conversion Interrupt source
@@ -1076,7 +1491,7 @@ void DFSDM_DMATransferConfig(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_DMAConversion
   *         This parameter can be: ENABLE or DISABLE.
   * @retval None
   */
-void DFSDM_ITConfig(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_IT, FunctionalState NewState)
+void DFSDM_ITConfig(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_IT, FunctionalState NewState)
  {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -1095,6 +1510,7 @@ void DFSDM_ITConfig(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_IT, FunctionalState Ne
   }
 }
 
+#if defined(STM32F412xG)
 /**
   * @brief  Enables or disables the Clock Absence Interrupt.
   * @param  NewState: new state of the interrupt.
@@ -1109,12 +1525,12 @@ void DFSDM_ITClockAbsenceCmd(FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the Interrupt source */
-    DFSDM0->FLTCR2 |= DFSDM_IT_CKAB;
+    DFSDM1_0->FLTCR2 |= DFSDM_IT_CKAB;
   }
   else
   {
     /* Disable the Interrupt source */
-    DFSDM0->FLTCR2 &= ~(DFSDM_IT_CKAB);
+    DFSDM1_0->FLTCR2 &= ~(DFSDM_IT_CKAB);
   }
 }
 
@@ -1132,18 +1548,110 @@ void DFSDM_ITShortCircuitDetectorCmd(FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the Interrupt source */
-    DFSDM0->FLTCR2 |= DFSDM_IT_SCD;
+    DFSDM1_0->FLTCR2 |= DFSDM_IT_SCD;
   }
   else
   {
     /* Disable the Interrupt source */
-    DFSDM0->FLTCR2 &= ~(DFSDM_IT_SCD);
+    DFSDM1_0->FLTCR2 &= ~(DFSDM_IT_SCD);
+  }
+}
+#endif /* STM32F412xG */
+
+#if defined(STM32F413_423xx)
+/**
+  * @brief  Enables or disables the Clock Absence Interrupt.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2.  
+  * @param  NewState: new state of the interrupt.
+  *         This parameter can be: ENABLE or DISABLE.
+  * @retval None
+  */
+void DFSDM_ITClockAbsenceCmd(uint32_t Instance, FunctionalState NewState)
+ {
+  /* Check the parameters */
+  assert_param(IS_FUNCTIONAL_STATE(NewState));
+  if(Instance == 1)
+  {
+    if (NewState != DISABLE)
+    {
+      /* Enable the Interrupt source */
+      DFSDM1_0->FLTCR2 |= DFSDM_IT_CKAB;
+    }
+    else
+    {
+      /* Disable the Interrupt source */
+      DFSDM1_0->FLTCR2 &= ~(DFSDM_IT_CKAB);
+    }
+  }
+  else /* DFSDM2 */
+  {
+    if (NewState != DISABLE)
+    {
+      /* Enable the Interrupt source */
+      DFSDM2_0->FLTCR2 |= DFSDM_IT_CKAB;
+    }
+    else
+    {
+      /* Disable the Interrupt source */
+      DFSDM2_0->FLTCR2 &= ~(DFSDM_IT_CKAB);
+    }
   }
 }
 
 /**
+  * @brief  Enables or disables the Short Circuit Detector Interrupt.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2.  
+  * @param  NewState: new state of the interrupt.
+  *         This parameter can be: ENABLE or DISABLE.
+  * @retval None
+  */
+void DFSDM_ITShortCircuitDetectorCmd(uint32_t Instance, FunctionalState NewState)
+ {
+  /* Check the parameters */
+  assert_param(IS_FUNCTIONAL_STATE(NewState));
+
+  if(Instance == 1)
+  {
+    if (NewState != DISABLE)
+    {
+      /* Enable the Interrupt source */
+      DFSDM1_0->FLTCR2 |= DFSDM_IT_SCD;
+    }
+    else
+    {
+      /* Disable the Interrupt source */
+      DFSDM1_0->FLTCR2 &= ~(DFSDM_IT_SCD);
+    }
+  }
+  else /* DFSDM2 */
+  {
+    if (NewState != DISABLE)
+    {
+      /* Enable the Interrupt source */
+      DFSDM2_0->FLTCR2 |= DFSDM_IT_SCD;
+    }
+    else
+    {
+      /* Disable the Interrupt source */
+      DFSDM2_0->FLTCR2 &= ~(DFSDM_IT_SCD);
+    } 
+  }
+  
+}
+#endif /* STM32F413_423xx */
+
+/**
   * @brief  Checks whether the specified DFSDM flag is set or not.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM peripheral.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  LPT_FLAG: specifies the flag to check.
   *         This parameter can be any combination of the following values:
   *            @arg DFSDM_FLAG_JEOC: End of injected conversion Flag
@@ -1155,7 +1663,7 @@ void DFSDM_ITShortCircuitDetectorCmd(FunctionalState NewState)
   *            @arg DFSDM_FLAG_RCIP: Regular conversion in progress status
   * @retval None
   */
-FlagStatus DFSDM_GetFlagStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_FLAG)
+FlagStatus DFSDM_GetFlagStatus(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_FLAG)
 {
   ITStatus bitstatus = RESET;
 
@@ -1174,6 +1682,7 @@ FlagStatus DFSDM_GetFlagStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_FLAG)
   return bitstatus;
 }
 
+#if defined(STM32F412xG)
 /**
   * @brief  Checks whether the specified Clock Absence Channel flag is set or not.
   * @param  DFSDM_FLAG_CLKAbsence: specifies the flag to check.
@@ -1187,7 +1696,7 @@ FlagStatus DFSDM_GetClockAbsenceFlagStatus(uint32_t DFSDM_FLAG_CLKAbsence)
   /* Check the parameters */
   assert_param(IS_DFSDM_CLK_ABS_FLAG(DFSDM_FLAG_CLKAbsence));
 
-  if ((DFSDM0->FLTISR & DFSDM_FLAG_CLKAbsence) != RESET)
+  if((DFSDM1_0->FLTISR & DFSDM_FLAG_CLKAbsence) != RESET)
   {
     bitstatus = SET;
   }
@@ -1211,7 +1720,7 @@ FlagStatus DFSDM_GetShortCircuitFlagStatus(uint32_t DFSDM_FLAG_SCD)
   /* Check the parameters */
   assert_param(IS_DFSDM_SCD_FLAG(DFSDM_FLAG_SCD));
 
-  if ((DFSDM0->FLTISR & DFSDM_FLAG_SCD) != RESET)
+  if ((DFSDM1_0->FLTISR & DFSDM_FLAG_SCD) != RESET)
   {
     bitstatus = SET;
   }
@@ -1219,22 +1728,114 @@ FlagStatus DFSDM_GetShortCircuitFlagStatus(uint32_t DFSDM_FLAG_SCD)
   {
     bitstatus = RESET;
   }
+
+  return bitstatus;
+}
+#endif /* STM32F412xG */
+#if defined(STM32F413_423xx)
+/**
+  * @brief  Checks whether the specified Clock Absence Channel flag is set or not.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2. 
+  * @param  DFSDM_FLAG_CLKAbsence: specifies the flag to check.
+  *         This parameter can be a value of @ref DFSDM_Clock_Absence_Flag_Definition
+  * @retval None
+  */
+FlagStatus DFSDM_GetClockAbsenceFlagStatus(uint32_t Instance, uint32_t DFSDM_FLAG_CLKAbsence)
+{
+  ITStatus bitstatus = RESET;
+    
+  /* Check the parameters */
+  assert_param(IS_DFSDM_CLK_ABS_FLAG(DFSDM_FLAG_CLKAbsence));
+  
+  if(Instance == 1)
+  {    
+    if((DFSDM1_0->FLTISR & DFSDM_FLAG_CLKAbsence) != RESET)
+    {
+      bitstatus = SET;
+    }
+    else
+    {
+      bitstatus = RESET;
+    }
+  }
+  else /* DFSDM2 */
+  {
+    /* Check the parameters */
+    assert_param(IS_DFSDM_CLK_ABS_FLAG(DFSDM_FLAG_CLKAbsence));
+    
+    if((DFSDM2_0->FLTISR & DFSDM_FLAG_CLKAbsence) != RESET)
+    {
+      bitstatus = SET;
+    }
+    else
+    {
+      bitstatus = RESET;
+    } 
+  }
   return bitstatus;
 }
 
 /**
+  * @brief  Checks whether the specified Short Circuit Channel Detector flag is set or not.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2. 
+  * @param  DFSDM_FLAG_SCD: specifies the flag to check.
+  *         This parameter can be a value of @ref DFSDM_SCD_Flag_Definition
+  * @retval None
+  */
+FlagStatus DFSDM_GetShortCircuitFlagStatus(uint32_t Instance, uint32_t DFSDM_FLAG_SCD)
+{
+  ITStatus bitstatus = RESET;
+
+  /* Check the parameters */
+  assert_param(IS_DFSDM_SCD_FLAG(DFSDM_FLAG_SCD));
+
+  if(Instance == 1)
+  {
+    if ((DFSDM1_0->FLTISR & DFSDM_FLAG_SCD) != RESET)
+    {
+      bitstatus = SET;
+    }
+    else
+    {
+      bitstatus = RESET;
+    }
+  }
+  else /* DFSDM2 */
+  {
+    if ((DFSDM2_0->FLTISR & DFSDM_FLAG_SCD) != RESET)
+    {
+      bitstatus = SET;
+    }
+    else
+    {
+      bitstatus = RESET;
+    } 
+  }
+  return bitstatus;
+}
+#endif /* STM32F413_423xx */
+/**
   * @brief  Checks whether the specified Watchdog threshold flag is set or not.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM peripheral. 
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_AWDChannelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
   * @param  DFSDM_Threshold: specifies the Threshold.
   *         This parameter can be a value of @ref DFSDM_Threshold_Selection.
   * @retval None
   */
-FlagStatus DFSDM_GetWatchdogFlagStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint8_t DFSDM_Threshold)
+FlagStatus DFSDM_GetWatchdogFlagStatus(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint8_t DFSDM_Threshold)
 {
   ITStatus bitstatus = RESET;
 
-  /* Check the parameters */  
+  /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
   assert_param(IS_DFSDM_Threshold(DFSDM_Threshold));
   assert_param(IS_DFSDM_AWD_CHANNEL(DFSDM_AWDChannelx));
@@ -1252,14 +1853,21 @@ FlagStatus DFSDM_GetWatchdogFlagStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWD
 
 /**
   * @brief  Clears the DFSDMx's pending flag.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM peripheral.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_CLEARF: specifies the pending bit to clear.
   *         This parameter can be any combination of the following values:
   *            @arg DFSDM_CLEARF_JOVR: Injected data overrun Clear Flag
   *            @arg DFSDM_CLEARF_ROVR: Regular data overrun Clear Flag
   * @retval None
   */
-void DFSDM_ClearFlag(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_CLEARF)
+void DFSDM_ClearFlag(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_CLEARF)
 {
   /* Check the parameters */
   assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
@@ -1269,6 +1877,7 @@ void DFSDM_ClearFlag(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_CLEARF)
   DFSDMx->FLTICR |= DFSDM_CLEARF;
 }
 
+#if defined(STM32F412xG)
 /**
   * @brief  Clears the DFSDMx's pending Clock Absence Channel flag.
   * @param  DFSDM_CLEARF_CLKAbsence: specifies the pending bit to clear.
@@ -1281,7 +1890,7 @@ void DFSDM_ClearClockAbsenceFlag(uint32_t DFSDM_CLEARF_CLKAbsence)
   assert_param(IS_DFSDM_CLK_ABS_CLEARF(DFSDM_CLEARF_CLKAbsence));
 
   /* Clear the IT pending Flag Bit */
-  DFSDM0->FLTICR |= DFSDM_CLEARF_CLKAbsence;
+  DFSDM1_0->FLTICR |= DFSDM_CLEARF_CLKAbsence;
 }
 
 /**
@@ -1296,33 +1905,100 @@ void DFSDM_ClearShortCircuitFlag(uint32_t DFSDM_CLEARF_SCD)
   assert_param(IS_DFSDM_SCD_CHANNEL_FLAG(DFSDM_CLEARF_SCD));
 
   /* Clear the pending Flag Bit */
-  DFSDM0->FLTICR |= DFSDM_CLEARF_SCD;
+  DFSDM1_0->FLTICR |= DFSDM_CLEARF_SCD;
+}
+#endif /* STM32F412xG */
+
+#if defined(STM32F413_423xx)
+/**
+  * @brief  Clears the DFSDMx's pending Clock Absence Channel flag.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2. 
+  * @param  DFSDM_CLEARF_CLKAbsence: specifies the pending bit to clear.
+  *         This parameter can be any combination of @ref DFSDM_Clear_ClockAbs_Flag_Definition
+  * @retval None
+  */
+void DFSDM_ClearClockAbsenceFlag(uint32_t Instance, uint32_t DFSDM_CLEARF_CLKAbsence)
+{
+  /* Check the parameters */
+  assert_param(IS_DFSDM_CLK_ABS_CLEARF(DFSDM_CLEARF_CLKAbsence));
+
+  if(Instance == 1)
+  {
+    /* Clear the IT pending Flag Bit */
+    DFSDM1_0->FLTICR |= DFSDM_CLEARF_CLKAbsence;
+  }
+  else /* DFSDM2 */
+  {
+    /* Clear the IT pending Flag Bit */
+    DFSDM2_0->FLTICR |= DFSDM_CLEARF_CLKAbsence; 
+  }
 }
 
 /**
+  * @brief  Clears the DFSDMx's pending Short circuit Channel flag.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2. 
+  * @param  DFSDM_CLEARF_SCD: specifies the pending bit to clear.
+  *         This parameter can be any combination of @ref DFSDM_Clear_Short_Circuit_Flag_Definition
+  * @retval None
+  */
+void DFSDM_ClearShortCircuitFlag(uint32_t Instance, uint32_t DFSDM_CLEARF_SCD)
+{
+  /* Check the parameters */
+  assert_param(IS_DFSDM_SCD_CHANNEL_FLAG(DFSDM_CLEARF_SCD));
+
+  if(Instance == 1)
+  {
+    /* Clear the pending Flag Bit */
+    DFSDM1_0->FLTICR |= DFSDM_CLEARF_SCD;
+  }
+  else
+  {
+    /* Clear the pending Flag Bit */
+    DFSDM2_0->FLTICR |= DFSDM_CLEARF_SCD; 
+  }
+}
+#endif /* STM32F413_423xx */
+/**
   * @brief  Clears the DFSDMx's pending Analog watchdog Channel flag.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM peripheral.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_AWDChannelx: where x can be a value from 0 to 7 to select the DFSDM Channel.
   * @param  DFSDM_Threshold: specifies the Threshold.
   *         This parameter can be a value of @ref DFSDM_Threshold_Selection.
   * @retval None
   */
-void DFSDM_ClearAnalogWatchdogFlag(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint8_t DFSDM_Threshold)
+void DFSDM_ClearAnalogWatchdogFlag(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_AWDChannelx, uint8_t DFSDM_Threshold)
 {
   /* Check the parameters */
-  assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));  
+  assert_param(IS_DFSDM_ALL_FILTER(DFSDMx));
   assert_param(IS_DFSDM_Threshold(DFSDM_Threshold));
   assert_param(IS_DFSDM_AWD_CHANNEL(DFSDM_AWDChannelx));
 
   if ((DFSDMx->FLTAWSR & ((DFSDM_AWDChannelx >> 16) << DFSDM_Threshold) ) != RESET)
-
-  /* Clear the pending Flag Bit */
-  DFSDMx->FLTAWCFR |= (DFSDM_AWDChannelx >> 16) << DFSDM_Threshold;
+  {
+    /* Clear the pending Flag Bit */
+    DFSDMx->FLTAWCFR |= (DFSDM_AWDChannelx >> 16) << DFSDM_Threshold;
+  }
 }
 
 /**
   * @brief  Check whether the specified DFSDM interrupt has occurred or not.
-  * @param  DFSDMx: where x can be 0 or 1 to select the DFSDM peripheral.
+  * @param  DFSDMx: specifies the filter to be selected :
+  *         This parameter can be one of the following values :
+  *            @arg DFSDM1_0 : DFSDM 1 Filter 0
+  *            @arg DFSDM1_1 : DFSDM 1 Filter 1
+  *            @arg DFSDM2_0 : DFSDM 2 Filter 0 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_1 : DFSDM 2 Filter 1 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_2 : DFSDM 2 Filter 2 (available only for STM32F413_423xx devices)
+  *            @arg DFSDM2_3 : DFSDM 2 Filter 3 (available only for STM32F413_423xx devices)
   * @param  DFSDM_IT: specifies the DFSDM interrupt source to check.
   *            @arg DFSDM_IT_JEOC: End of injected conversion Interrupt source
   *            @arg DFSDM_IT_REOC: End of regular conversion Interrupt source
@@ -1331,7 +2007,7 @@ void DFSDM_ClearAnalogWatchdogFlag(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_AWDChan
   *            @arg DFSDM_IT_AWD : Analog watchdog Interrupt source
   * @retval The new state of DFSDM_IT (SET or RESET).
   */
-ITStatus DFSDM_GetITStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_IT)
+ITStatus DFSDM_GetITStatus(DFSDM_Filter_TypeDef* DFSDMx, uint32_t DFSDM_IT)
 {
   ITStatus bitstatus = RESET;
   uint32_t itstatus = 0x0, itenable = 0x0;
@@ -1357,6 +2033,7 @@ ITStatus DFSDM_GetITStatus(DFSDM_TypeDef* DFSDMx, uint32_t DFSDM_IT)
   return bitstatus;
 }
 
+#if defined(STM32F412xG)
 /**
   * @brief  Check whether the specified Clock Absence channel interrupt has occurred or not.
   * @param  DFSDM_IT_CLKAbsence: specifies on which channel check the interrupt source.
@@ -1396,20 +2073,65 @@ ITStatus DFSDM_GetClockAbsenceITStatus(uint32_t DFSDM_IT_CLKAbsence)
   * @retval The new state of DFSDM_IT (SET or RESET).
   * @note   Short circuit interrupt is handled only by DFSDM0.
   */
-ITStatus DFSDM_GetGetShortCircuitITStatus(uint32_t DFSDM_IT_SCR)
+ITStatus DFSDM_GetShortCircuitITStatus(uint32_t DFSDM_IT_SCR)
+{
+  ITStatus bitstatus = RESET;
+  uint32_t itstatus = 0x0, itenable = 0x0;
+  
+  /* Check the parameters */
+  assert_param(IS_DFSDM_SCD_IT(DFSDM_IT_SCR));
+  
+  /* Get the Interrupt Status bit value */
+  itstatus = DFSDM0->FLTISR & DFSDM_IT_SCR;
+  
+  /* Check if the Interrupt is enabled */
+  itenable = DFSDM0->FLTCR2 & DFSDM_IT_SCD;
+  
+  if ((itstatus != RESET) && (itenable != RESET))
+  {
+    bitstatus = SET;
+  }
+  else
+  {
+    bitstatus = RESET;
+  }
+  return bitstatus;
+}
+#endif /* STM32F412xG */
+
+#if defined(STM32F413_423xx)
+/**
+  * @brief  Check whether the specified Clock Absence channel interrupt has occurred or not.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2. 
+  * @param  DFSDM_IT_CLKAbsence: specifies on which channel check the interrupt source.
+  *         This parameter can be a value of @ref DFSDM_Clock_Absence_Interrupt_Definition.
+  * @retval The new state of DFSDM_IT (SET or RESET).
+  * @note   Clock absence interrupt is handled only by DFSDM0.
+  */
+ITStatus DFSDM_GetClockAbsenceITStatus(uint32_t Instance, uint32_t DFSDM_IT_CLKAbsence)
 {
   ITStatus bitstatus = RESET;
   uint32_t itstatus = 0x0, itenable = 0x0;
 
   /* Check the parameters */
-  assert_param(IS_DFSDM_SCD_IT(DFSDM_IT_SCR));
+  assert_param(IS_DFSDM_CLK_ABS_IT(DFSDM_IT_CLKAbsence));
 
-  /* Get the Interrupt Status bit value */
-  itstatus = DFSDM0->FLTISR & DFSDM_IT_SCR;
-
-  /* Check if the Interrupt is enabled */
-  itenable = DFSDM0->FLTCR2 & DFSDM_IT_SCD;
-
+  if(Instance == 1)
+  {
+    /* Get the Interrupt Status bit value */
+    itstatus = DFSDM1_0->FLTISR & DFSDM_IT_CLKAbsence;
+    /* Check if the Interrupt is enabled */
+    itenable = DFSDM1_0->FLTCR2 & DFSDM_IT_CKAB;
+  }
+  else
+  {
+    /* Get the Interrupt Status bit value */
+    itstatus = DFSDM2_0->FLTISR & DFSDM_IT_CLKAbsence;
+    /* Check if the Interrupt is enabled */
+    itenable = DFSDM1_0->FLTCR2 & DFSDM_IT_CKAB; 
+  }
+  
   if ((itstatus != RESET) && (itenable != RESET))
   {
     bitstatus = SET;
@@ -1422,13 +2144,59 @@ ITStatus DFSDM_GetGetShortCircuitITStatus(uint32_t DFSDM_IT_SCR)
 }
 
 /**
+  * @brief  Check whether the specified Short Circuit channel interrupt has occurred or not.
+  * @param  Instance: select the instance of DFSDM
+  *         This parameter can be: 1 or 2. 
+  * @param  DFSDM_IT_SCR: specifies on which channel check the interrupt source.
+  *         This parameter can be a value of @ref DFSDM_SCD_Interrupt_Definition.
+  * @retval The new state of DFSDM_IT (SET or RESET).
+  * @note   Short circuit interrupt is handled only by Filter 0.
+  */
+ITStatus DFSDM_GetShortCircuitITStatus(uint32_t Instance, uint32_t DFSDM_IT_SCR)
+{
+  ITStatus bitstatus = RESET;
+  uint32_t itstatus = 0x0, itenable = 0x0;
+  
+  /* Check the parameters */
+  assert_param(IS_DFSDM_SCD_IT(DFSDM_IT_SCR));
+
+  if(Instance == 1)
+  {
+    /* Get the Interrupt Status bit value */
+    itstatus = DFSDM1_0->FLTISR & DFSDM_IT_SCR;
+    
+    /* Check if the Interrupt is enabled */
+    itenable = DFSDM1_0->FLTCR2 & DFSDM_IT_SCD;
+  }
+  else /* DFSDM2 */
+  {
+    /* Get the Interrupt Status bit value */
+    itstatus = DFSDM2_0->FLTISR & DFSDM_IT_SCR;
+    
+    /* Check if the Interrupt is enabled */
+    itenable = DFSDM2_0->FLTCR2 & DFSDM_IT_SCD; 
+  }
+  
+  if ((itstatus != RESET) && (itenable != RESET))
+  {
+    bitstatus = SET;
+  }
+  else
+  {
+    bitstatus = RESET;
+  }
+  return bitstatus;
+}
+
+#endif /* STM32F413_423xx */
+/**
   * @}
   */
 
 /**
   * @}
   */
-#endif /* STM32F412xG */
+#endif /* STM32F412xG || STM32F413_423xx */
 
 /**
   * @}

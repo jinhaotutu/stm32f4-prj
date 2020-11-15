@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_fmpi2c.h
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file contains all the functions prototypes for the I2C Fast Mode
   *          Plus firmware library.
   ******************************************************************************
@@ -44,7 +44,7 @@
 /** @addtogroup FMPI2C
   * @{
   */
-#if defined(STM32F410xx) || defined(STM32F412xG) || defined(STM32F446xx)
+#if defined(STM32F410xx) || defined(STM32F412xG) || defined(STM32F413_423xx) || defined(STM32F446xx)
 /* Exported types ------------------------------------------------------------*/
 
 /**
@@ -456,7 +456,7 @@ void FMPI2C_ClearFlag(FMPI2C_TypeDef* FMPI2Cx, uint32_t FMPI2C_FLAG);
 ITStatus FMPI2C_GetITStatus(FMPI2C_TypeDef* FMPI2Cx, uint32_t FMPI2C_IT);
 void FMPI2C_ClearITPendingBit(FMPI2C_TypeDef* FMPI2Cx, uint32_t FMPI2C_IT);
 
-#endif /* STM32F410xx || STM32F412xG || STM32F446xx */
+#endif /* STM32F410xx || STM32F412xG || STM32F413_423xx || STM32F446xx */
 /**
   * @}
   */

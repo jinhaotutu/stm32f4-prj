@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_fmpi2c.c
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file provides firmware functions to manage the following 
   *          functionalities of the Inter-Integrated circuit Fast Mode Plus (FMPI2C):
   *           + Initialization and Configuration
@@ -87,7 +87,7 @@
   * @brief FMPI2C driver modules
   * @{
   */
-#if defined(STM32F410xx) || defined(STM32F412xG) || defined(STM32F446xx)
+#if defined(STM32F410xx) || defined(STM32F412xG)|| defined(STM32F413_423xx) || defined(STM32F446xx)
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
@@ -1541,7 +1541,7 @@ void FMPI2C_ClearITPendingBit(FMPI2C_TypeDef* FMPI2Cx, uint32_t FMPI2C_IT)
 /**
   * @}
   */
-#endif /* STM32F410xx || STM32F412xG || STM32F446xx */
+#endif /* STM32F410xx || STM32F412xG || STM32F413_423xx || STM32F446xx */
 
 /**
   * @}

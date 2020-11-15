@@ -25,6 +25,7 @@
 
 /* Functions ------------------------------------------------------------------*/
 
+#ifndef USE_OS
 /**
   * @note   Delay_Config
   * @brief  None
@@ -70,5 +71,6 @@ void delay_us(vu32 nTime)
     }
     SysTick->CTRL &= (~SysTick_CTRL_ENABLE_Msk);
 }
+#endif
 
 /************************ (C) COPYRIGHT Tuu ********END OF FILE****************/

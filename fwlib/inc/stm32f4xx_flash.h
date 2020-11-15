@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_flash.h
   * @author  MCD Application Team
-  * @version V1.7.1
-  * @date    20-May-2016
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file contains all the functions prototypes for the FLASH 
   *          firmware library.
   ******************************************************************************
@@ -191,6 +191,10 @@ typedef enum
                                    (((ADDRESS) >= 0x1FFF7800) && ((ADDRESS) <= 0x1FFF7A0F)))
 #endif /* STM32F410xx */
 
+#if defined(STM32F413_423xx)
+#define IS_FLASH_ADDRESS(ADDRESS) ((((ADDRESS) >= 0x08000000) && ((ADDRESS) <= 0x0817FFFF)) ||\
+                                   (((ADDRESS) >= 0x1FFF7800) && ((ADDRESS) <= 0x1FFF7BDF)))
+#endif /* STM32F413_423xx */
 /**
   * @}
   */ 
