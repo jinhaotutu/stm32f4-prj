@@ -74,7 +74,7 @@ lwip的主要适配文件都集中在port文件夹，其中arch与os文件夹都
 eth_init.c (eth部分解析)：
 
 ```c
-/* Ethernet pins configuration ************* lan8720硬件pin脚连接 *********/
+/* Ethernet pins configuration ************* lan8720硬件pin脚连接 - RMII *********/
     /*
         ETH_MDIO -------------------------> PA2
         ETH_MDC --------------------------> PC1
@@ -85,7 +85,6 @@ eth_init.c (eth部分解析)：
         ETH_MII_TX_EN/ETH_RMII_TX_EN -----> PB11
         ETH_MII_TXD0/ETH_RMII_TXD0 -------> PB12
         ETH_MII_TXD1/ETH_RMII_TXD1 -------> PB13
-        ETH_MII_RESET/ETH_RMII_RESET -----> PC0
                                                   */
 
 /**

@@ -82,7 +82,9 @@ static void ETH_GPIO_Config(void)
 #endif /* PHY_CLOCK_MCO */
     SYSCFG_ETH_MediaInterfaceConfig(SYSCFG_ETH_MediaInterface_MII);
 #elif defined RMII_MODE
+#ifdef PHY_CLOCK_MCO
     RCC_MCO1Config(RCC_MCO1Source_PLLCLK,RCC_MCO1Div_2);
+#endif /* PHY_CLOCK_MCO */
     SYSCFG_ETH_MediaInterfaceConfig(SYSCFG_ETH_MediaInterface_RMII);
 #endif
 
