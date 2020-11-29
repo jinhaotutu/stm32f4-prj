@@ -140,7 +140,6 @@ static void low_level_init(struct netif *netif)
 
     /* Enable MAC and DMA transmission and reception */
     ETH_Start();
-
 }
 
 /**
@@ -215,7 +214,7 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
         memcpy( (u8_t*)((u8_t*)buffer + bufferoffset), (u8_t*)((u8_t*)q->payload + payloadoffset), byteslefttocopy );
         bufferoffset = bufferoffset + byteslefttocopy;
         framelength = framelength + byteslefttocopy;
-        }
+    }
 
     /* Note: padding and CRC for transmitted frame 
         are automatically inserted by DMA */
@@ -225,7 +224,7 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 
     errval = ERR_OK;
 
-    error:
+error:
 
     /* When Transmit Underflow flag is set, clear it and issue a Transmit Poll Demand to resume transmission */
     if ((ETH->DMASR & ETH_DMASR_TUS) != (uint32_t)RESET)
@@ -278,26 +277,26 @@ static struct pbuf * low_level_input(struct netif *netif)
         bufferoffset = 0;
         for(q = p; q != NULL; q = q->next)
         {
-        byteslefttocopy = q->len;
-        payloadoffset = 0;
+            byteslefttocopy = q->len;
+            payloadoffset = 0;
 
-        /* Check if the length of bytes to copy in current pbuf is bigger than Rx buffer size*/
-        while( (byteslefttocopy + bufferoffset) > ETH_RX_BUF_SIZE )
-        {
-            /* Copy data to pbuf*/
-            memcpy( (u8_t*)((u8_t*)q->payload + payloadoffset), (u8_t*)((u8_t*)buffer + bufferoffset), (ETH_RX_BUF_SIZE - bufferoffset));
+            /* Check if the length of bytes to copy in current pbuf is bigger than Rx buffer size*/
+            while( (byteslefttocopy + bufferoffset) > ETH_RX_BUF_SIZE )
+            {
+                /* Copy data to pbuf*/
+                memcpy( (u8_t*)((u8_t*)q->payload + payloadoffset), (u8_t*)((u8_t*)buffer + bufferoffset), (ETH_RX_BUF_SIZE - bufferoffset));
 
-            /* Point to next descriptor */
-            DMARxDesc = (ETH_DMADESCTypeDef *)(DMARxDesc->Buffer2NextDescAddr);
-            buffer = (unsigned char *)(DMARxDesc->Buffer1Addr);
+                /* Point to next descriptor */
+                DMARxDesc = (ETH_DMADESCTypeDef *)(DMARxDesc->Buffer2NextDescAddr);
+                buffer = (unsigned char *)(DMARxDesc->Buffer1Addr);
 
-            byteslefttocopy = byteslefttocopy - (ETH_RX_BUF_SIZE - bufferoffset);
-            payloadoffset = payloadoffset + (ETH_RX_BUF_SIZE - bufferoffset);
-            bufferoffset = 0;
-        }
-        /* Copy remaining data in pbuf */
-        memcpy( (u8_t*)((u8_t*)q->payload + payloadoffset), (u8_t*)((u8_t*)buffer + bufferoffset), byteslefttocopy);
-        bufferoffset = bufferoffset + byteslefttocopy;
+                byteslefttocopy = byteslefttocopy - (ETH_RX_BUF_SIZE - bufferoffset);
+                payloadoffset = payloadoffset + (ETH_RX_BUF_SIZE - bufferoffset);
+                bufferoffset = 0;
+            }
+            /* Copy remaining data in pbuf */
+            memcpy( (u8_t*)((u8_t*)q->payload + payloadoffset), (u8_t*)((u8_t*)buffer + bufferoffset), byteslefttocopy);
+            bufferoffset = bufferoffset + byteslefttocopy;
         }
     }
 
@@ -405,7 +404,7 @@ err_t ethernetif_init(struct netif *netif)
 
 #if LWIP_NETIF_HOSTNAME
     /* Initialize interface hostname */
-    netif->hostname = "lwip";
+    netif->hostname = "stm32_net";
 #endif /* LWIP_NETIF_HOSTNAME */
 
     netif->name[0] = IFNAME0;

@@ -128,6 +128,8 @@ a lot of data that needs to be copied, this should be set high. */
    turning this on does currently not work. */
 #define LWIP_DHCP               1
 
+#define LWIP_NETIF_HOSTNAME     1
+
 
 /* ---------- UDP options ---------- */
 #define LWIP_UDP                1
