@@ -51,8 +51,6 @@ static void http_client_cb(void *p)
 {
     log_d("%s", __FUNCTION__);
 
-    wait_net_config();
-
     char recv_buf[HTTP_DATA_BUF]= {0};
 
     while (1){

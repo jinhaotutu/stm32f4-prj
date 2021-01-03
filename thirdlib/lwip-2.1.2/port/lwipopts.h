@@ -32,6 +32,8 @@
 
 #define USE_LWIP
 
+#define LWIP_SOCKET_POLL    0
+
 /**
  * SYS_LIGHTWEIGHT_PROT==1: if you want inter-task protection for certain
  * critical regions during buffer allocation, deallocation and memory

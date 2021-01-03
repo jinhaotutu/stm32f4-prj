@@ -1749,20 +1749,21 @@ typedef struct stat cs_stat_t;
 
 #include <ctype.h>
 #include <errno.h>
-//#include <fcntl.h>
+#include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-//#include <stat.h>
 #include <time.h>
-//#include <types.h>
-//#include <unistd.h>
+
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 //#include <dirent.h>
 
 #include "config.h"
 #define MG_LWIP 1
 #define CS_ENABLE_DEBUG 0
-#define CS_ENABLE_STRDUP 1
+#define CS_ENABLE_STRDUP 0
 
 #define to64(x) strtoll(x, NULL, 10)
 #define INT64_FMT "lld"
