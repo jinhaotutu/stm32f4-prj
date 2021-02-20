@@ -95,8 +95,8 @@ int FreeRTOS_read(Network* n, unsigned char* buffer, int len, int timeout_ms)
 	{
 		int rc = 0;
 
-		FreeRTOS_setsockopt(n->my_socket, 0, FREERTOS_SO_RCVTIMEO, &xTicksToWait, sizeof(xTicksToWait));
-		rc = FreeRTOS_recv(n->my_socket, buffer + recvLen, len - recvLen, 0);
+		n->my_socket = socket(AF_INET, SOCK_STREAM, 0);
+		rc = recv(n->my_socket, buffer + recvLen, len - recvLen, 0);
 		if (rc > 0)
 			recvLen += rc;
 		else if (rc < 0)
@@ -121,8 +121,8 @@ int FreeRTOS_write(Network* n, unsigned char* buffer, int len, int timeout_ms)
 	{
 		int rc = 0;
 
-		FreeRTOS_setsockopt(n->my_socket, 0, FREERTOS_SO_RCVTIMEO, &xTicksToWait, sizeof(xTicksToWait));
-		rc = FreeRTOS_send(n->my_socket, buffer + sentLen, len - sentLen, 0);
+		setsockopt(n->my_socket, 0, SO_RCVTIMEO, &xTicksToWait, sizeof(xTicksToWait));
+		rc = send(n->my_socket, buffer + sentLen, len - sentLen, 0);
 		if (rc > 0)
 			sentLen += rc;
 		else if (rc < 0)
@@ -138,7 +138,7 @@ int FreeRTOS_write(Network* n, unsigned char* buffer, int len, int timeout_ms)
 
 void FreeRTOS_disconnect(Network* n)
 {
-	FreeRTOS_closesocket(n->my_socket);
+	close(n->my_socket);
 }
 
 
@@ -153,27 +153,33 @@ void NetworkInit(Network* n)
 
 int NetworkConnect(Network* n, char* addr, int port)
 {
-	struct freertos_sockaddr sAddr;
+	struct sockaddr_in sAddr;
 	int retVal = -1;
 	uint32_t ipAddress;
 
-	if ((ipAddress = FreeRTOS_gethostbyname(addr)) == 0)
+	if ((ipAddress = gethostbyname(addr)) == 0)
 		goto exit;
 
-	sAddr.sin_port = FreeRTOS_htons(port);
-	sAddr.sin_addr = ipAddress;
+    sAddr.sin_family = AF_INET;
+    sAddr.sin_port = htons(port);
+    sAddr.sin_addr.s_addr = ipAddress;
 
-	if ((n->my_socket = FreeRTOS_socket(FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP)) < 0)
+	if ((n->my_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		goto exit;
 
-	if ((retVal = FreeRTOS_connect(n->my_socket, &sAddr, sizeof(sAddr))) < 0)
+	if ((retVal = connect(n->my_socket, (struct sockaddr*)&sAddr, sizeof(sAddr))) < 0)
 	{
-		FreeRTOS_closesocket(n->my_socket);
+		close(n->my_socket);
 	    goto exit;
 	}
 
 exit:
 	return retVal;
+}
+
+int NetworkDisconnect(Network* n)
+{
+    close(n->my_socket);
 }
 
 

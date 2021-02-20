@@ -1,9 +1,32 @@
-#include "MQTTClient.h"
+/**
+  *****************************************************************************
+  * @file    : mqtt_api.h
+  * @author  : Tuu
+  * @version : 1.0.0
+  * @date    : 2021-01-03
+  * @brief   : stm32f407 mqtt api
+  ******************************************************************************
+  * @lasteditors  : Tuu
+  * @lasteditTime : 2021-01-03
+  ******************************************************************************
+  * @atten   : Copyright (C) by Tuu Inc
+  *
+  * this is mqtt api
+  *****************************************************************************
+  */
 
+/* Includes ------------------------------------------------------------------*/
+#include "MQTTClient.h"
+#include "mqtt_api.h"
+
+/* Private define ------------------------------------------------------------*/
 #define MQTT_BUF_LEN    512
 
-typedef int (*mqtt_msg)(const char *topic, int topic_len, const char *data, int data_len);
+/* Private typedef -----------------------------------------------------------*/
 
+/* Private macro -------------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
 typedef struct mqtt_opt
 {
     /* data */
@@ -15,6 +38,17 @@ typedef struct mqtt_opt
 }mqtt_opt;
 static mqtt_opt mq_opts;
 
+
+/* Private function prototypes -----------------------------------------------*/
+
+/* Private functions ---------------------------------------------------------*/
+
+/**
+  * @note   tcp_server_cb
+  * @brief  This function is used to run app task
+  * @param  *p
+  * @retval None
+  */
 static void messageArrived(MessageData *md)
 {
     MQTTMessage *message = md->message;
@@ -25,12 +59,24 @@ static void messageArrived(MessageData *md)
     }
 }
 
+/**
+  * @note   tcp_server_cb
+  * @brief  This function is used to run app task
+  * @param  *p
+  * @retval None
+  */
 int mqtt_subscribe(const char *topic, char qos)
 {
     printf("Subscribing to %s\n", topic);
     return MQTTSubscribe(&(mq_opts.c), topic, qos, messageArrived);
 }
 
+/**
+  * @note   tcp_server_cb
+  * @brief  This function is used to run app task
+  * @param  *p
+  * @retval None
+  */
 int mqtt_publish(const char *topic, char qos, const char *data, int len)
 {
     printf("Publish to %s\n", topic);
@@ -42,6 +88,12 @@ int mqtt_publish(const char *topic, char qos, const char *data, int len)
     return MQTTPublish(&(mq_opts.c), topic, &message);
 }
 
+/**
+  * @note   tcp_server_cb
+  * @brief  This function is used to run app task
+  * @param  *p
+  * @retval None
+  */
 int mqtt_client_exit(void)
 {
     printf("exit\n");
@@ -52,6 +104,12 @@ int mqtt_client_exit(void)
     return 0;
 }
 
+/**
+  * @note   tcp_server_cb
+  * @brief  This function is used to run app task
+  * @param  *p
+  * @retval None
+  */
 int mqtt_client_connect(const char *url, int port, const char *id, const char *user, const char *password, mqtt_msg cb)
 {
     if (NULL == url){
@@ -70,10 +128,7 @@ int mqtt_client_connect(const char *url, int port, const char *id, const char *u
     }
     printf("connect succees\n");
 
-    ret = MQTTClientInit(&(mq_opts.c), &(mq_opts.n), 1000, mq_opts.send_buf, MQTT_BUF_LEN, mq_opts.recv_buf, MQTT_BUF_LEN);
-    if (0 != ret){
-        goto exit;
-    }
+    MQTTClientInit(&(mq_opts.c), &(mq_opts.n), 1000, mq_opts.send_buf, MQTT_BUF_LEN, mq_opts.recv_buf, MQTT_BUF_LEN);
     printf("mqtt init succees\n");
 
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
@@ -99,51 +154,15 @@ exit:
     return ret;
 }
 
+/**
+  * @note   tcp_server_cb
+  * @brief  This function is used to run app task
+  * @param  *p
+  * @retval None
+  */
 int mqtt_loop(void)
 {
     return MQTTYield(&(mq_opts.c), 1000);
 }
 
-
-/////
-
-int mqtt_topic_parse(const char *topic, int topic_len, const char *data, int data_len)
-{
-    printf("topic:%.*s\n", topic_len, topic);
-    printf("payload:%.*s\n", data_len, data);
-
-    return 0;
-}
-
-
-void mqtt_demo(void *p)
-{
-    mqtt_client_connect("10.6.5.215", 1883, "pid/sn", "pid", "sn+dsk+psk", mqtt_topic_parse);
-
-    mqtt_subscribe("pid/sn/things/v1/model/#", 0);
-
-    while(1)
-    {
-        mqtt_loop();
-
-        IMOU_sleepMs(5000);
-        mqtt_publish("pid/sn/things/v1/model/set", 0, "hello world", strlen("hello world"));
-        mqtt_publish("pid/sn/things/v1/model/get", 0, "see you", strlen("see you"));
-    }
-
-    mqtt_client_exit();
-}
-
-int mqtt_start(void)
-{
-    void*p;
-    IMOU_createThread(&p, mqtt_demo, NULL);
-
-    while(1)
-    {
-        IMOU_sleepMs(1000);
-    }
-
-    return 0;
-}
-
+/************************ (C) COPYRIGHT Tuu ********END OF FILE****************/

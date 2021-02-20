@@ -67,6 +67,7 @@ typedef struct Network
 
 /* The Timer structure must be defined in the platform specific header,
  * and have the following functions to operate on it.  */
+#include "MQTTFreeRTOS.h"
 extern void TimerInit(Timer*);
 extern char TimerIsExpired(Timer*);
 extern void TimerCountdownMS(Timer*, unsigned int);
