@@ -18,7 +18,7 @@
 #include "mongoose.h"
 
 /* Defines --------------------------------------------------------------------*/
-#define SHOW_HEADER_LOG     0
+#define SHOW_HEADER_LOG     1
 
 
 /* Variables ------------------------------------------------------------------*/
@@ -85,7 +85,7 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data)
     }
 }
 
-int http_post_syn(const char *url, const char *post_data, char *body_buf, int body_len)
+int http_post_syn(const char *url, const char *headers, const char *post_data, char *body_buf, int body_len)
 {
     if (NULL == url){
         return -1;
@@ -96,7 +96,7 @@ int http_post_syn(const char *url, const char *post_data, char *body_buf, int bo
     mg_mgr_init(&mgr, NULL);
     // mg_set_nameserver(&mgr, "114.114.114.114");
 
-    struct mg_connection *nc = mg_connect_http(&mgr, ev_handler, url, NULL, post_data);
+    struct mg_connection *nc = mg_connect_http(&mgr, ev_handler, url, headers, post_data);
     if(NULL == nc){
         return -1;
     }

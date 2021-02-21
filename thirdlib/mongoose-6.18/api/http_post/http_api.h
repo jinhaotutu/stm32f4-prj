@@ -41,7 +41,7 @@ extern "C" {
 
 
 /* Functions ------------------------------------------------------------------*/
-int http_post_syn(const char *url, const char *post_data, char *body_buf, int body_len);
+int http_post_syn(const char *url, const char *headers, const char *post_data, char *body_buf, int body_len);
 
 #ifdef __cplusplus
 }

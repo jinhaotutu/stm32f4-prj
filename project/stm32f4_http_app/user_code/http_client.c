@@ -28,7 +28,8 @@
 /* Private define ------------------------------------------------------------*/
 #define HTTP_DATA_BUF        1024
 
-#define POST_URL "http://www.baidu.com"
+// 测试接口
+#define POST_URL "http://www.kuaidi100.com/query"
 
 /* Private typedef -----------------------------------------------------------*/
 
@@ -59,8 +60,12 @@ static void http_client_cb(void *p)
             continue;
         }
 
-        int recv_len = http_post_syn(POST_URL, NULL, recv_buf, HTTP_DATA_BUF);
-        log_d("recv: %d\n%s", recv_len, recv_buf);
+        int recv_len = http_post_syn(POST_URL, NULL, NULL, recv_buf, HTTP_DATA_BUF);
+        if (recv_len > 0){
+            log_d("recv: %d\n%.*s", recv_len, recv_len, recv_buf);
+        }else{
+            log_e("post err");
+        }
 
         vTaskDelay(10000);
     }
