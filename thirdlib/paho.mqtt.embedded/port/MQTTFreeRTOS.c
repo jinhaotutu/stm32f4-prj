@@ -60,7 +60,7 @@ void TimerCountdownMS(Timer* timer, unsigned int timeout_ms)
 
 void TimerCountdown(Timer* timer, unsigned int timeout) 
 {
-	TimerCountdownMS(timer, timeout * 1000);
+	TimerCountdownMS(timer, timeout * portTICK_PERIOD_MS);
 }
 
 
@@ -73,7 +73,7 @@ int TimerLeftMS(Timer* timer)
 
 char TimerIsExpired(Timer* timer)
 {
-	return xTaskCheckForTimeOut(&timer->xTimeOut, &timer->xTicksToWait) == pdTRUE;
+	return xTaskCheckForTimeOut(&timer->xTimeOut, &timer->xTicksToWait);
 }
 
 
@@ -95,7 +95,6 @@ int FreeRTOS_read(Network* n, unsigned char* buffer, int len, int timeout_ms)
 	{
 		int rc = 0;
 
-		n->my_socket = socket(AF_INET, SOCK_STREAM, 0);
 		rc = recv(n->my_socket, buffer + recvLen, len - recvLen, 0);
 		if (rc > 0)
 			recvLen += rc;
@@ -155,14 +154,14 @@ int NetworkConnect(Network* n, char* addr, int port)
 {
 	struct sockaddr_in sAddr;
 	int retVal = -1;
-	uint32_t ipAddress;
 
-	if ((ipAddress = gethostbyname(addr)) == 0)
+    struct hostent *host = gethostbyname(addr);
+	if (host == NULL)
 		goto exit;
 
     sAddr.sin_family = AF_INET;
     sAddr.sin_port = htons(port);
-    sAddr.sin_addr.s_addr = ipAddress;
+    sAddr.sin_addr = *(struct in_addr *)(host->h_addr_list[0]);
 
 	if ((n->my_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		goto exit;

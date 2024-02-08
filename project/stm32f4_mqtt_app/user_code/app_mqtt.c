@@ -26,8 +26,8 @@
 #include "mqtt_api.h"
 
 /* Private define ------------------------------------------------------------*/
-#define MQTT_URL    "localhost"
-#define MQTT_PORT   1883
+#define MQTT_URL    "jp-tyo-dvm-2.sakurafrp.com"
+#define MQTT_PORT   61883
 
 #define MQTT_SUBSCRIBE_TOPIC    "productid/deviceid/property/#"
 #define MQTT_PUBLISH_TOPIC_1    "productid/deviceid/property/set"
@@ -39,6 +39,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 static TaskHandle_t mqtt_client = NULL;
+static TaskHandle_t mqtt_handle = NULL;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -59,6 +60,13 @@ int mqtt_topic_parse(const char *topic, int topic_len, const char *data, int dat
     return 0;
 }
 
+static void mqtt_loop_cb(void *p)
+{
+    while(1){
+        mqtt_loop();
+    }
+}
+
 /**
   * @note   tcp_server_cb
   * @brief  This function is used to run app task
@@ -75,13 +83,20 @@ static void mqtt_client_cb(void *p)
 
     mqtt_subscribe(MQTT_SUBSCRIBE_TOPIC, 0);
 
+    // xTaskCreate(  (TaskFunction_t )mqtt_loop_cb,
+    //                     (const char *   )"mqtt_client",
+    //                     (unsigned short )1024,
+    //                     (void *         )NULL,
+    //                     (UBaseType_t    )RTOS_PRIORITY_LEVEL_2ST,
+    //                     (TaskHandle_t * )&mqtt_handle);
+
     while(1)
     {
-        mqtt_loop();
-
         vTaskDelay(5000);
         mqtt_publish(MQTT_PUBLISH_TOPIC_1, 0, "hello world", strlen("hello world"));
         mqtt_publish(MQTT_PUBLISH_TOPIC_2, 0, "see you", strlen("see you"));
+
+        mqtt_loop();
     }
 
     mqtt_client_exit();

@@ -129,7 +129,6 @@ int mqtt_client_connect(const char *url, int port, const char *id, const char *u
     printf("connect succees\n");
 
     MQTTClientInit(&(mq_opts.c), &(mq_opts.n), 1000, mq_opts.send_buf, MQTT_BUF_LEN, mq_opts.recv_buf, MQTT_BUF_LEN);
-    printf("mqtt init succees\n");
 
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
     data.willFlag = 0;
@@ -142,9 +141,16 @@ int mqtt_client_connect(const char *url, int port, const char *id, const char *u
 
     ret = MQTTConnect(&(mq_opts.c), &data);
     if (0 != ret){
+        printf("mqtt conn error\n");
         goto exit;
     }
     printf("mqtt connect succees\n");
+
+#ifdef MQTT_TASK
+    MQTTStartTask(&(mq_opts.c));
+#endif
+
+    printf("mqtt init succees\n");
 
     return 0;
 
